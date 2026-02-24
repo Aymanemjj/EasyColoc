@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\UpdateHouseRequest;
 use App\Models\House;
+use Illuminate\Support\Facades\Auth;
 
 class HouseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($house)
     {
+        dd($house);
         return view('house');
     }
 
@@ -33,7 +35,8 @@ class HouseController extends Controller
         House::create([
             'title' => $validated['title'],
             'description' => $validated['description']
-        ]);
+        ])->user()->attach(Auth::user(),['is_owner'=>1]);
+        
         return redirect()->route('house.index');
     }
 

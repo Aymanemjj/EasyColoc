@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\DocBlock\Tags\Author;
+
+use function PHPUnit\Framework\isEmpty;
 
 class User extends Authenticatable
 {
@@ -51,14 +55,20 @@ class User extends Authenticatable
         ];
     }
 
-    public function role(): BelongsTo{
+    public function role(): BelongsTo
+    {
         return $this->belongsTo(Role::class, 'role_id');
     }
-    
-    public function house(): BelongsToMany{
-        return $this->belongsToMany(House::class);
+
+    public function house(): BelongsToMany
+    {
+        return $this->belongsToMany(House::class)
+            ->withTimestamps()
+            ->withPivot(['is_owner']);
     }
 
-/*     public function reserved(): Belongs
- */
+    public function notReserved()
+    {
+        return $this->house->isEmpty() ? true : false;
+    }
 }

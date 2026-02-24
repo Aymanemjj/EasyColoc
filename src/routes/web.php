@@ -22,6 +22,10 @@ Route::get('/create-house', function(){
     return redirect()->route("house.create");
 });
 
+Route::get('/house/{$house}', function(){
+    return redirect()->route("house.index");
+});
+
 require __DIR__.'/auth.php';
 
 
