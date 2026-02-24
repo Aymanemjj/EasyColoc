@@ -13,7 +13,7 @@ class HouseController extends Controller
      */
     public function index()
     {
-        //
+        return view('house');
     }
 
     /**
@@ -21,7 +21,7 @@ class HouseController extends Controller
      */
     public function create()
     {
-        //
+        return view('houseCreate');
     }
 
     /**
@@ -29,7 +29,12 @@ class HouseController extends Controller
      */
     public function store(StoreHouseRequest $request)
     {
-        //
+        $validated = $request->validated();
+        House::create([
+            'title' => $validated['title'],
+            'description' => $validated['description']
+        ]);
+        return redirect()->route('house.index');
     }
 
     /**

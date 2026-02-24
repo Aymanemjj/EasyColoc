@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreHouseRequest extends FormRequest
 {
@@ -10,8 +12,9 @@ class StoreHouseRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
-        return false;
+    {   
+        /* return $this->user()->can('create'); */
+        return true;
     }
 
     /**
@@ -22,7 +25,8 @@ class StoreHouseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'min:5']
         ];
     }
 }
