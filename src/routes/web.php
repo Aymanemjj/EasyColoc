@@ -22,9 +22,9 @@ Route::get('/create-house', function(){
     return redirect()->route("house.create");
 });
 
-Route::get('/house/{$house}', function(){
-    return redirect()->route("house.index");
-});
+Route::patch('/house/details/{id}',[HouseController::class, 'show'])->name('house.exit');
+
+Route::get('/house/details/{id}',[HouseController::class, 'show']);
 
 require __DIR__.'/auth.php';
 

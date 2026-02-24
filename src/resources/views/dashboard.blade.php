@@ -24,7 +24,7 @@
                                 <small class="bg-yellow-500 p-2 rounded-md">Owner</small>
                             @endif
 
-                            <x-nav-link :href="route('house.index',$house)">{{ $house->title }}</x-nav-link>
+                            <a href="house/details/{{$house->id}}">{{ $house->title }}</a>
 
                             <small class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{$house->description}}</small>
                             

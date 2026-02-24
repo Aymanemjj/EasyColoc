@@ -12,10 +12,8 @@ class HouseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($house)
+    public function index()
     {
-        dd($house);
-        return view('house');
     }
 
     /**
@@ -35,17 +33,22 @@ class HouseController extends Controller
         House::create([
             'title' => $validated['title'],
             'description' => $validated['description']
-        ])->user()->attach(Auth::user(),['is_owner'=>1]);
-        
+        ])->user()->attach(Auth::user(), ['is_owner' => 1]);
+
         return redirect()->route('house.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(House $house)
+    public function show($id)
     {
-        //
+        $house = House::find($id);
+        return view('house', compact('house'));
+    }
+
+    public function exit(){
+        
     }
 
     /**
