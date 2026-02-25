@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExpencesRequest;
 use App\Http\Requests\UpdateExpencesRequest;
 use App\Models\Expences;
+use App\Models\House;
 
 class ExpencesController extends Controller
 {
@@ -19,9 +20,10 @@ class ExpencesController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $house = House::find($id);
+        return view('expenceCreate', compact('house'));
     }
 
     /**

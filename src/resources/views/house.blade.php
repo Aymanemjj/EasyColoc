@@ -7,16 +7,17 @@
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-2">
             <div class=" flex justify-between">
-                <small class="bg-yellow-500 p-2 rounded-md">Owner: {{ $house->owner[0]->firstname }}
-                    {{ $house->owner[0]->lastname }}</small>
+                <small class="bg-yellow-500 p-2 rounded-md">Owner: {{ $house->owner[0]->fullname() }}</small>
                 <div class="flex gap-2">
-                    <form action="{{ route('house.destroy', $house) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button
-                            class="bg-red-600 bg-opacity-30 border-red-600 border-2 border-solid p-1 rounded-md text-red-600"
-                            type="submit">Delete</button>
-                    </form>
+                    @if ($house->isOwner())
+                        <form action="{{ route('house.destroy', $house) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button
+                                class="bg-red-600 bg-opacity-30 border-red-600 border-2 border-solid p-1 rounded-md text-red-600"
+                                type="submit">Delete</button>
+                        </form>
+                    @endif
                     <form action="{{ route('house.exit', $house) }}" method="POST">
                         @csrf
                         @method('PATCH')
@@ -33,8 +34,10 @@
                         <h2>{{ $house->title }}</h2>
                         <small class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{ $house->description }}</small>
                     </div>
-                    <div>
-                        <table>
+                    <div class="dark:text-gray-100 w-full">
+                        <x-nav-link :href="route('expense.create', $house->id)">{{ __('Create Expense') }}</x-nav-link>
+                        <x-nav-link :href="route('category.create', $house->id)">{{ __('Create Category') }}</x-nav-link>
+                        <table class="w-full">
                             <tr>
                                 <th>Category</th>
                                 <th>To</th>
@@ -44,7 +47,7 @@
                             </tr>
                             <thead>
                             <tbody>
-                                
+
                             </tbody>
 
                         </table>
@@ -60,6 +63,24 @@
                                     @foreach ($house->user as $user)
                                         <div>
                                             <small>{{ $user->fullname() }}</small>
+                                            <div>
+
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
+                        <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
+                            <div>
+                                <h3>Categories</h3>
+                                <div>
+                                    @foreach ($categories as $category)
+                                        <div>
+                                            <small>{{ $category->name }}</small>
                                             <div>
 
                                             </div>

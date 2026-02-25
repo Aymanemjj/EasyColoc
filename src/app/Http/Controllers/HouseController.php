@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreHouseRequest;
 use App\Http\Requests\UpdateHouseRequest;
+use App\Models\Category;
 use App\Models\House;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,11 +45,12 @@ class HouseController extends Controller
     public function show($id)
     {
         $house = House::find($id);
-        return view('house', compact('house'));
+        $categories = Category::where('house_id', $id)->get();
+        return view('house', compact('house', 'categories'));
     }
 
     public function exit(){
-        
+
     }
 
     /**

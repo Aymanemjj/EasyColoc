@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class House extends Model
 {
@@ -32,5 +33,9 @@ class House extends Model
             ->withTimestamps()
             ->withPivot(['is_owner'])
             ->wherePivot('is_owner', 1);
+    }
+    public function isOwner()
+    {
+        return $this->owner[0]->id == Auth::user()->id ? true : false;
     }
 }

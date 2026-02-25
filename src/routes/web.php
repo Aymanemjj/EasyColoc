@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpencesController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +24,19 @@ Route::get('/create-house', function(){
     return redirect()->route("house.create");
 });
 
-Route::patch('/house/details/{id}',[HouseController::class, 'show'])->name('house.exit');
-
+Route::patch('/house/details/{id}',[HouseController::class, 'exit'])->name('house.exit');
 Route::get('/house/details/{id}',[HouseController::class, 'show']);
+
+Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');
+Route::post('/house/{id}/category/create', [CategoryController::class, 'store'])->name('category.store');
+
+
+Route::get('/house/{id}/expence/create', [ExpencesController::class, 'create'])->name('expense.create');
+Route::post('/house/{id}/expence/create', [ExpencesController::class, 'store'])->name('expense.store');
 
 require __DIR__.'/auth.php';
 
 
 Route::resource('house', HouseController::class);
+Route::resource('category', CategoryController::class);
+Route::resource('expense', ExpencesController::class);

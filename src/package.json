@@ -19,6 +19,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "kutty": "^0.6.0"
+        "kutty": "^0.6.0",
+        "simple-datatables": "^10.2.0"
     }
 }
