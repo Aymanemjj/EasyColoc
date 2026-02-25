@@ -25,7 +25,7 @@ Route::get('/create-house', function(){
 });
 
 Route::patch('/house/details/{id}',[HouseController::class, 'exit'])->name('house.exit');
-Route::get('/house/details/{id}',[HouseController::class, 'show']);
+Route::get('/house/details/{id}',[HouseController::class, 'show'])->name('house.show');
 
 Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');
 Route::post('/house/{id}/category/create', [CategoryController::class, 'store'])->name('category.store');
@@ -39,4 +39,3 @@ require __DIR__.'/auth.php';
 
 Route::resource('house', HouseController::class);
 Route::resource('category', CategoryController::class);
-Route::resource('expense', ExpencesController::class);

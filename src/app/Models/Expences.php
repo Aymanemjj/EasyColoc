@@ -10,9 +10,10 @@ class Expences extends Model
     protected $fillable = [
         'title',
         'amount',
-        'month',
+        'date',
         'user_id',
-        'house_id'
+        'house_id',
+        'category_id',
     ];
 
     use SoftDeletes;

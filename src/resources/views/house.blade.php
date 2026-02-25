@@ -7,7 +7,9 @@
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-2">
             <div class=" flex justify-between">
-                <small class="bg-yellow-500 p-2 rounded-md">Owner: {{ $house->owner[0]->fullname() }}</small>
+                <small class="bg-yellow-600 bg-opacity-30 border-yellow-600 border-2 text-yellow-600 p-2 rounded-md"><i
+                        class="fa-solid fa-crown fa-xs" style="color: rgb(255, 212, 59);"></i> Owner:
+                    {{ $house->owner[0]->fullname() }}</small>
                 <div class="flex gap-2">
                     @if ($house->isOwner())
                         <form action="{{ route('house.destroy', $house) }}" method="POST">
@@ -15,7 +17,8 @@
                             @method('DELETE')
                             <button
                                 class="bg-red-600 bg-opacity-30 border-red-600 border-2 border-solid p-1 rounded-md text-red-600"
-                                type="submit">Delete</button>
+                                type="submit">Delete <i class="fa-regular fa-trash-can fa-xs"
+                                    style="color: rgb(231, 24, 24);"></i></button>
                         </form>
                     @endif
                     <form action="{{ route('house.exit', $house) }}" method="POST">
@@ -23,7 +26,8 @@
                         @method('PATCH')
                         <button
                             class="bg-white bg-opacity-30 border-white border-2 border-solid p-1 rounded-md text-white"
-                            type="submit">Exit</button>
+                            type="submit">Exit <i class="fa-solid fa-arrow-right-from-bracket fa-xs"
+                                style="color: rgb(255, 255, 255);"></i></button>
                     </form>
                 </div>
             </div>
@@ -47,6 +51,12 @@
                             </tr>
                             <thead>
                             <tbody>
+                                @foreach ($expences->user as $expence)
+                                    <tr>
+*                                       <td>{{$expence->}}</td>
+                                    </tr>
+                                @endforeach
+
 
                             </tbody>
 
@@ -60,11 +70,10 @@
                             <div>
                                 <h3>Expenses</h3>
                                 <div>
-                                    @foreach ($house->user as $user)
+                                    @foreach ($expenses->user as $expense)
                                         <div>
-                                            <small>{{ $user->fullname() }}</small>
+                                            <small></small>
                                             <div>
-
                                             </div>
                                         </div>
                                     @endforeach
@@ -98,9 +107,24 @@
                                 <h3>Members</h3>
                                 <div>
                                     @foreach ($house->user as $user)
-                                        <div>
+                                        <div class="flex justify-between">
                                             <small>{{ $user->fullname() }}</small>
-                                            <div>
+                                            <div class="flex gap-1">
+                                                <form action="">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"><i class="fa-solid fa-crown fa-xs"
+                                                            style="color: rgb(255, 212, 59);"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"><i class="fa-solid fa-ban fa-flip-both fa-sm"
+                                                            style="color: rgb(255, 59, 59);"></i>
+                                                    </button>
+                                                </form>
+
 
                                             </div>
                                         </div>

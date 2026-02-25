@@ -21,7 +21,7 @@
 
             <!-- category title -->
             <div class="mt-4">
-                <x-input-label for="category_description" :value="__('description')" />
+                <x-input-label for="category_description" :value="__('Description')" />
 
                 <x-text-area id="category_description" class="block mt-1 w-full" type="text" name="description" required></x-text-area>
 
