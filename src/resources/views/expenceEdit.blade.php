@@ -7,55 +7,59 @@
 
 
     <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-        <form method="POST" action="{{ route('expence.store', $house->id) }}">
+        <form method="POST" action="{{ route('expence.update', $expence->id) }}">
             @csrf
-            <!-- expence title -->
+            @method('PUT')
+            <!-- expense title -->
             <div class="mt-4">
-                <x-input-label for="expence_title" :value="__('Title')" />
+                <x-input-label for="expense_title" :value="__('Title')" />
 
-                <x-text-input id="expence_title" class="block mt-1 w-full" type="text" name="title" required />
+                <x-text-input id="expense_title" class="block mt-1 w-full" type="text" name="title" required
+                    value="{{ $expence->title }}" />
 
-                <x-input-error :messages="$errors->get('expence_title')" class="mt-2" />
+                <x-input-error :messages="$errors->get('expense_title')" class="mt-2" />
             </div>
 
-            <!-- expence amount -->
+            <!-- expense amount -->
             <div class="mt-4">
-                <x-input-label for="expence_amount" :value="__('Amount')" />
+                <x-input-label for="expense_amount" :value="__('Amount')" />
 
-                <x-text-input id="expence_amount" class="block mt-1 w-full" type="number" name="amount"
+                <x-text-input id="expense_amount" class="block mt-1 w-full" type="number" name="amount"
+                    value="{{ $expence->amount }}" required></x-text-input>
+
+                <x-input-error :messages="$errors->get('expense_amount')" class="mt-2" />
+            </div>
+
+
+            <!-- expense date -->
+            <div class="mt-4">
+                <x-input-label for="expense_date" :value="__('Date')" />
+
+                <x-text-input id="expense_date" class="block mt-1 w-full" type="date" name="date"
                     required></x-text-input>
 
-                <x-input-error :messages="$errors->get('expence_amount')" class="mt-2" />
+                <x-input-error :messages="$errors->get('expense_date')" class="mt-2" />
             </div>
 
 
-            <!-- expence date -->
+            <!-- expense category -->
             <div class="mt-4">
-                <x-input-label for="expence_date" :value="__('Date')" />
-
-                <x-text-input id="expence_date" class="block mt-1 w-full" type="date" name="date"
-                    required></x-text-input>
-
-                <x-input-error :messages="$errors->get('expence_date')" class="mt-2" />
-            </div>
-
-
-            <!-- expence category -->
-            <div class="mt-4">
-                <x-input-label for="expence_category" :value="__('Category')" />
-                <select name="category_id" id="expence_category"
+                <x-input-label for="expense_category" :value="__('Category')" />
+                <select name="category_id" id="expense_category"
                     class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900
                  dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500
                   dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     required>
+                    <option value="{{ $expence->category->id }}">{{ $expence->category->name }}</option>
 
                     @foreach ($house->categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
 
-                <x-input-error :messages="$errors->get('expence_category_id')" class="mt-2" />
+                <x-input-error :messages="$errors->get('expense_category_id')" class="mt-2" />
             </div>
+
 
             <!-- expence payer -->
             <div class="mt-4">
@@ -65,9 +69,11 @@
                  dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500
                   dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     required>
-
+                    <option value="{{ $expence->user_id }}">{{ $expence->owner->fullname() }}</option>
                     @foreach ($house->user as $user)
-                        <option value="{{ $user->id }}">{{ $user->fullname() }}</option>
+                        @if ($user->id != $expence->user_id)
+                            <option value="{{ $user->id }}">{{ $user->fullname() }}</option>
+                        @endif
                     @endforeach
                 </select>
 
@@ -75,11 +81,9 @@
             </div>
 
 
-
-
             <div class="flex items-center justify-end mt-4">
                 <x-primary-button class="ms-4">
-                    {{ __('Create') }}
+                    {{ __('Edit') }}
                 </x-primary-button>
             </div>
         </form>

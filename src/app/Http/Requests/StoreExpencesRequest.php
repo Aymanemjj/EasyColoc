@@ -27,7 +27,8 @@ class StoreExpencesRequest extends FormRequest
             'title' => ['required', 'string', 'max:255', 'min:1'],
             'amount' => ['required', 'numeric', 'min:1'],
             'date' => ['required', 'date'],
-            'category_id' => ['required']
+            'category_id' => ['required'],
+            'user_id' => ['required']
         ];
     }
 

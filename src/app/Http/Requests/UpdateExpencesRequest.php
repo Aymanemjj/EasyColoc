@@ -11,7 +11,7 @@ class UpdateExpencesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UpdateExpencesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:255', 'min:1'],
+            'amount' => ['required', 'numeric', 'min:1'],
+            'date' => ['required', 'date'],
+            'category_id' => ['required'],
+            'user_id' => ['required']
+
         ];
     }
 }

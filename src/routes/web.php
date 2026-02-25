@@ -31,8 +31,11 @@ Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])
 Route::post('/house/{id}/category/create', [CategoryController::class, 'store'])->name('category.store');
 
 
-Route::get('/house/{id}/expence/create', [ExpencesController::class, 'create'])->name('expense.create');
-Route::post('/house/{id}/expence/create', [ExpencesController::class, 'store'])->name('expense.store');
+Route::get('/house/{id}/expence/create', [ExpencesController::class, 'create'])->name('expence.create');
+Route::post('/house/{id}/expence/create', [ExpencesController::class, 'store'])->name('expence.store');
+Route::get('/house/{id}/expence/edit', [ExpencesController::class, 'edit'])->name('expence.edit');
+Route::put('/house/{id}/expence/edit', [ExpencesController::class, 'update'])->name('expence.update');
+Route::delete('/house/{id}/', [ExpencesController::class, 'destroy'])->name('expence.destroy');
 
 require __DIR__.'/auth.php';
 

@@ -25,9 +25,9 @@ class ExpencesController extends Controller
      */
     public function create($id)
     {
+        
         $house = House::find($id);
-        $categories = Category::where('house_id', $id)->get();
-        return view('expenceCreate', compact('house', 'categories'));
+        return view('expenceCreate', compact('house'));
     }
 
     /**
@@ -37,7 +37,7 @@ class ExpencesController extends Controller
     {
         $validated = $request->validated();
         $validated['date'] = substr($validated['date'], 0, 7);
-        
+
         if (!Category::where('id', $validated['category_id'])->where('house_id', $id)->exists()) {
 
             throw ValidationException::withMessages([
@@ -49,7 +49,7 @@ class ExpencesController extends Controller
             'title' => $validated['title'],
             'amount' => $validated['amount'],
             'date' => $validated['date'],
-            'user_id' => Auth::user()->id,
+            'user_id' => $validated['user_id'],
             'house_id' => $id,
             'category_id' => $validated['category_id']
         ]);
@@ -67,24 +67,32 @@ class ExpencesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Expences $expences)
+    public function edit($id)
     {
-        //
+        $expence = Expences::find($id);
+        $house = House::find($expence->house_id);
+        $categories = Category::where('house_id', $id)->where('id', '<>', $expence->category_id)->get();
+        return view('expenceEdit', compact('house', 'categories', 'expence'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExpencesRequest $request, Expences $expences)
+    public function update(UpdateExpencesRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+        $expence = Expences::find($id);
+        $expence->update($validated);
+        return redirect()->route('house.show', $expence->house_id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expences $expences)
+    public function destroy($id)
     {
-        //
+        $expence = Expences::find($id);
+        $expence->delete();
+        return redirect()->back();
     }
 }

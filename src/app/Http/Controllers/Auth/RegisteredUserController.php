@@ -36,13 +36,23 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::first();
+/*         if (!User::exists()) {
+            dd('true');
+        } else {
+            dd('false');
+        }
+
+
+
+        dd('enter');
+
+ */        $user = User::first();
         if (is_null($user)) {
             $request['role'] = 1;
         } else {
             $request['role'] = 2;
         }
-        
+
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
@@ -53,7 +63,7 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
-        
+
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));

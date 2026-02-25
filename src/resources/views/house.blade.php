@@ -38,22 +38,45 @@
                         <h2>{{ $house->title }}</h2>
                         <small class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{ $house->description }}</small>
                     </div>
-                    <div class="dark:text-gray-100 w-full">
-                        <x-nav-link :href="route('expense.create', $house->id)">{{ __('Create Expense') }}</x-nav-link>
+                    <div class="dark:text-gray-100 w-full p-2">
+                        <x-nav-link :href="route('expence.create', $house->id)">{{ __('Create expence') }}</x-nav-link>
                         <x-nav-link :href="route('category.create', $house->id)">{{ __('Create Category') }}</x-nav-link>
-                        <table class="w-full">
-                            <tr>
-                                <th>Category</th>
-                                <th>To</th>
-                                <th>Amount</th>
-                                <th>Due</th>
-                                <th>Status</th>
+                        <table class="w-full text-center">
+                            <tr class="border-b">
+                                <th class="border-x">Title/Category</th>
+                                <th class="border-x">Payer</th>
+                                <th class="border-x">Amount</th>
+                                <th class="border-x">Action</th>
                             </tr>
                             <thead>
                             <tbody>
-                                @foreach ($expences->user as $expence)
+                                @foreach ($expences as $expence)
                                     <tr>
-*                                       <td>{{$expence->}}</td>
+                                        <td class="border-r px-2">
+                                            <div class="flex flex-col gap-1 text-left">
+                                                <h6>{{ $expence->title }}</h6>
+                                                <div
+                                                    class="bg-white bg-opacity-30 text-white border-2 border-white rounded-md px-1 size-fit">
+                                                    <small>{{ $expence->category->name }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="border-r px-2">{{ $expence->owner->fullname() }}</td>
+                                        <td class="border-r px-2">{{ $expence->amount }} $</td>
+                                        <td class="border-l text-right px-2">
+                                            <div class="flex gap-2 justify-end">
+                                                <button><a href="{{ route('expence.edit', $expence->id) }}"><i class="fa-solid fa-pen-to-square fa-xs"
+                                                            style="color: rgb(255, 212, 59);"></i></a></button>
+                                                <form action="{{ route('expence.destroy', $expence->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"><i class="fa-regular fa-trash-can fa-xs"
+                                                            style="color: rgb(231, 24, 24);"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
 
@@ -69,11 +92,19 @@
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
                             <div>
                                 <h3>Expenses</h3>
-                                <div>
-                                    @foreach ($expenses->user as $expense)
-                                        <div>
-                                            <small></small>
-                                            <div>
+                                <div class="flex flex-col gap-2">
+                                    @foreach ($expences as $expence)
+                                        <div class="bg-gray-900 rounded-md p-2 border-r-4 border-green-600">
+                                            <h4>{{ $expence->owner->fullname() }}</h4>
+                                            <div class="flex justify-between">
+                                                <small>{{ $expence->amount }} $</small>
+                                                <form action="" method="post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit"
+                                                        class="bg-green-600 bg-opacity-30 border-2 border-green-600 px-1 rounded-md text-xs">Payed</button>
+                                                </form>
+
                                             </div>
                                         </div>
                                     @endforeach

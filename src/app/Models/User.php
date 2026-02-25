@@ -75,4 +75,10 @@ class User extends Authenticatable
     {
         return $this->house->isEmpty() ? true : false;
     }
+
+    public function pfp(){
+        $pfp = substr($this->firstname, 0,1) . substr($this->lastname, 0,1);
+        return strtoupper($pfp);
+
+    }
 }
