@@ -29,6 +29,7 @@ Route::patch('/house/{id}/details',[HouseController::class, 'exit'])->name('hous
 Route::delete('/house/{id}/details',[HouseController::class, 'destroy'])->name('house.destroy');
 Route::get('/house/{id}/details',[HouseController::class, 'show'])->name('house.show');
 
+Route::patch('/house/{id}/user/{user}/{action}', [HouseController::class, 'action'])->name('user.action');
 
 
 Route::get('/house/{id}/expence/create', [ExpencesController::class, 'create'])->name('expence.create');
@@ -38,7 +39,6 @@ Route::put('/house/{id}/expence/edit', [ExpencesController::class, 'update'])->n
 Route::delete('/house/{id}/expence/delete', [ExpencesController::class, 'destroy'])->name('expence.destroy');
 
 Route::patch('/house/{id}/expence/status', [PaymentPendingController::class, 'statusChange'])->name('expence.pay');
-
 
 
 Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');

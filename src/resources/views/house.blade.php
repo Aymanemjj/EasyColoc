@@ -1,9 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Dashboard') }}
+            </h2>
+            @if (auth()->user()->reputation >= 0)
+                <div class="font-semibold text-lg text-gray-800 dark:text-green-600 leading-tight">
+                    <h2>Your reputation: {{ auth()->user()->reputation }}</h2>
+                </div>
+            @else
+                <div class="font-semibold text-lg text-gray-800 dark:text-red-600 leading-tight">
+                    <h2>Your reputation: {{ auth()->user()->reputation }}</h2>
+                </div>
+            @endif
+        </div>
     </x-slot>
+    <x-input-error :messages="$errors->get('user_id')" class="mt-2" />
+
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-2">
             <div class=" flex justify-between">
@@ -26,7 +39,7 @@
                         @method('PATCH')
                         <button
                             class="bg-white bg-opacity-30 border-white border-2 border-solid p-1 rounded-md text-white"
-                            type="submit">Exit <i class="fa-solid fa-arrow-right-from-bracket fa-xs"
+                            type="submit" name="exit">Exit <i class="fa-solid fa-arrow-right-from-bracket fa-xs"
                                 style="color: rgb(255, 255, 255);"></i></button>
                     </form>
                 </div>
@@ -46,7 +59,9 @@
                                 <th class="border-x">Title/Category</th>
                                 <th class="border-x">Payer</th>
                                 <th class="border-x">Amount</th>
-                                <th class="border-x">Action</th>
+                                @if ($house->authIsOwner())
+                                    <th class="border-x">Action</th>
+                                @endif
                             </tr>
                             <thead>
                             <tbody>
@@ -63,21 +78,23 @@
                                         </td>
                                         <td class="border-r px-2">{{ $expence->owner->fullname() }}</td>
                                         <td class="border-r px-2">{{ $expence->amount }} $</td>
-                                        <td class="border-l text-right px-2">
-                                            <div class="flex gap-2 justify-end">
-                                                <button><a href="{{ route('expence.edit', $expence->id) }}"><i
-                                                            class="fa-solid fa-pen-to-square fa-xs"
-                                                            style="color: rgb(255, 212, 59);"></i></a></button>
-                                                <form action="{{ route('expence.destroy', $expence->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"><i class="fa-regular fa-trash-can fa-xs"
-                                                            style="color: rgb(231, 24, 24);"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
+                                        @if ($house->authIsOwner())
+                                            <td class="border-l text-right px-2">
+                                                <div class="flex gap-2 justify-end">
+                                                    <button><a href="{{ route('expence.edit', $expence->id) }}"><i
+                                                                class="fa-solid fa-pen-to-square fa-xs"
+                                                                style="color: rgb(255, 212, 59);"></i></a></button>
+                                                    <form action="{{ route('expence.destroy', $expence->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"><i class="fa-regular fa-trash-can fa-xs"
+                                                                style="color: rgb(231, 24, 24);"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
 
@@ -95,12 +112,14 @@
                                 <h3>Your Expenses</h3>
                                 <div class="flex flex-col gap-2">
                                     @foreach (auth()->user()->needToPay($house->id) as $expence)
-                                    @if($expence->status)
-                                        <?php $color = 'green-600'; $status = 'payed'; ?>
-                                    @else
-                                        <?php $color = 'yellow-600'; $status = 'pending'; ?>
-                                    @endif
-                                        <div class="bg-gray-900 rounded-md p-2 border-r-4 border-{{$color}}">
+                                        @if ($expence->status)
+                                            <?php $color = 'green-600';
+                                            $status = 'payed'; ?>
+                                        @else
+                                            <?php $color = 'yellow-600';
+                                            $status = 'pending'; ?>
+                                        @endif
+                                        <div class="bg-gray-900 rounded-md p-2 border-r-4 border-{{ $color }}">
                                             <h4>{{ $expence->owner->fullname() }}</h4>
                                             <div class="flex justify-between">
                                                 <small>{{ $expence->amount }} $</small>
@@ -109,7 +128,7 @@
                                                     @method('PATCH')
 
                                                     <button type="submit"
-                                                        class="bg-{{$color}} bg-opacity-30 border-2 border-{{$color}} px-1 rounded-md text-xs">{{$status}}</button>
+                                                        class="bg-{{ $color }} bg-opacity-30 border-2 border-{{ $color }} px-1 rounded-md text-xs">{{ $status }}</button>
                                                 </form>
 
                                             </div>
@@ -164,15 +183,20 @@
                                                 @if ($house->userIsOwner($user))
                                                     <i class="fa-solid fa-crown fa-xs"
                                                         style="color: rgb(255, 212, 59);"></i>
-                                                @else
-                                                    <form action="">
+                                                @elseif($house->authIsOwner())
+                                                    <form
+                                                        action="{{ route('user.action', ['id' => $house->id, 'user' => $user->id, 'promote']) }}"
+                                                        method="post">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button type="submit"><i class="fa-solid fa-crown fa-xs"
+                                                        <button type="submit" name="promote"><i
+                                                                class="fa-solid fa-crown fa-xs"
                                                                 style="color: rgb(255, 212, 59);"></i>
                                                         </button>
                                                     </form>
-                                                    <form action="">
+                                                    <form
+                                                        action="{{ route('user.action', ['id' => $house->id, 'user' => $user->id, 'kick']) }}"
+                                                        method='post'>
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit"><i
@@ -180,6 +204,9 @@
                                                                 style="color: rgb(255, 59, 59);"></i>
                                                         </button>
                                                     </form>
+                                                @else
+                                                    <i class="fa-solid fa-arrow-left fa-xs"
+                                                        style="color: rgb(99, 230, 127);"></i>
                                                 @endif
 
 

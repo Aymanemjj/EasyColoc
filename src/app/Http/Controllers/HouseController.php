@@ -7,7 +7,10 @@ use App\Http\Requests\UpdateHouseRequest;
 use App\Models\Category;
 use App\Models\Expences;
 use App\Models\House;
+use App\Models\PaymentPending;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Request;
 
 class HouseController extends Controller
 {
@@ -49,15 +52,73 @@ class HouseController extends Controller
         return view('house', compact('house', 'categories', 'expences'));
     }
 
+
+
     public function exit($id)
     {
         $house = House::find($id);
-
+        $Auser = auth()->user();
         foreach ($house->user as $user) {
-            if ($user->id === auth()->user()->id) $user->pivot->delete();
+            if ($user->id === $Auser->id) $user->pivot->delete();
         }
-        
+        if (count($Auser->needToPay($house->id)) > 0) {
+            $Auser->reputation - 1;
+        } else {
+            $Auser->reputation + 1;
+        }
+
         return redirect()->route('dashboard');
+    }
+
+    public function cleanHouse($house) {}
+
+    public function action(Request $request, $id, $user, $action)
+    {
+        $house = House::find($id);
+        $user = User::find($user);
+
+        switch ($action) {
+            case 'kick':
+                $this->kickUser($house, $user);
+                break;
+            case 'promote':
+                $this->promote($house, $user);
+                break;
+            default:
+                break;
+        }
+    }
+    public function promote($house, $user)
+    {
+        foreach ($house->user as $Uuser) {
+            if ($Uuser->id == $user->id) $Uuser->pivot->is_owner = 1;
+            if ($Uuser->id == auth()->user()->id) $Uuser->pivot->is_owner = 0;
+        }
+
+        return redirect()->back();
+    }
+    public function kickUser($house, $user)
+    {
+
+        if (count($user->needToPay($house->id)) == 0) {
+            foreach ($house->user as $Uuser) {
+                if ($Uuser->id == $user->id) $Uuser->pivot->delete();
+            }
+        } else {
+            foreach ($user->needToPay($house->id) as $payment) {
+                $Npayment = new PaymentPending();
+                $Npayment->amount = $payment->amount;
+                $Npayment->user_id = $house->owner[0]->id;
+                $Npayment->expence_id = $payment->expence_id;
+                $Npayment->save();
+                $payment->delete();
+            }
+            foreach ($house->user as $Uuser) {
+                if ($Uuser->id == $user->id) $Uuser->pivot->delete();
+            }
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -81,9 +142,21 @@ class HouseController extends Controller
      */
     public function destroy($id)
     {
-        $house = House::find($id);
-        $house ->status = false;
-        $house->delete();
-        return redirect()->route('dashboard');
+        if (count(auth()->user()->needToPay()) == 0) {
+            $house = House::find($id);
+            $house->status = false;
+            $house->delete();
+            return redirect()->route('dashboard')
+                ->withErrors([
+                    "type" => 1,
+                    'general' => 'Success.'
+                ]);
+        } else {
+            return redirect()->back()
+                ->withErrors([
+                    'type' => 0,
+                    'general' => "You can't cancel when you have pending payments"
+                ]);
+        }
     }
 }

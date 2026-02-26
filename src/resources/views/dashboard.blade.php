@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-
     <div class="py-12 ">
         @if (auth()->user()->notReserved())
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

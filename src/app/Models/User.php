@@ -70,12 +70,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(House::class)
             ->withTimestamps()
-            ->withPivot(['is_owner']);
+            ->withPivot(['is_owner', 'deleted_at', 'banned']);
     }
 
     public function notReserved()
     {
-        return $this->house->isEmpty() ? true : false;
+        return $this->house->isEmpty() /* ? true : false */;
     }
 
     public function pfp()
@@ -92,21 +92,10 @@ class User extends Authenticatable
     public function needToPay($id)
     {
         $toPay = [];
-        foreach ($this->allPayments as $payment) {
 
-/*          
-            echo 'expence :';
-            echo PHP_EOL;
-            echo $payment->expence;
-            echo PHP_EOL;
-            echo "---------------------------------";
-            echo 'house :';
-            echo PHP_EOL;
-            echo $payment->expence->house;
-            echo PHP_EOL;
-            echo "---------------------------------";
- */
-            if ( $payment->expence->house->id == $id) array_push($toPay, $payment);
+        foreach ($this->allPayments as $payment) {
+            if ($payment->expence->house->id == $id && !$payment->status) array_push($toPay, $payment);
+
         }
 
         return $toPay;

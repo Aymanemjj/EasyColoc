@@ -27,11 +27,12 @@ class PaymentPendingController extends Controller
 
         $payment = PaymentPending::where('user_id', $expence->user_id)->where('expence_id', $expence->id)->get();
         $payment[0]->status = true;
+        $payment[0]->payment_date = Carbon::today()->toDateString();
         $payment[0]->save();
     }
 
     public function statusChange($id)
-    {
+    {   
         $payment = PaymentPending::find($id);
         $payment->status = !$payment->status;
         $payment->status ? $payment->payment_date = Carbon::today()->toDateString() : $payment->payment_date = null ;

@@ -12,20 +12,20 @@
 
             <!-- category title -->
             <div class="mt-4">
-                <x-input-label for="category_name" :value="__('Name')" />
+                <x-input-label for="name" :value="__('Name')" />
 
-                <x-text-input id="category_name" class="block mt-1 w-full" type="text" name="name" required />
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" required />
 
-                <x-input-error :messages="$errors->get('category_name')" class="mt-2" />
+                <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
             <!-- category title -->
             <div class="mt-4">
-                <x-input-label for="category_description" :value="__('Description')" />
+                <x-input-label for="description" :value="__('Description')" />
 
-                <x-text-area id="category_description" class="block mt-1 w-full" type="text" name="description" required></x-text-area>
+                <x-text-area id="description" class="block mt-1 w-full" type="text" name="description" required></x-text-area>
 
-                <x-input-error :messages="$errors->get('category_description')" class="mt-2" />
+                <x-input-error :messages="$errors->get('description')" class="mt-2" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
