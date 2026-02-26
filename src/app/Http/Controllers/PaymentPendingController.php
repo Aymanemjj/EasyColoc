@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expences;
 use App\Models\House;
 use App\Models\PaymentPending;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PaymentPendingController extends Controller
@@ -33,7 +34,9 @@ class PaymentPendingController extends Controller
     {
         $payment = PaymentPending::find($id);
         $payment->status = !$payment->status;
+        $payment->status ? $payment->payment_date = Carbon::today()->toDateString() : $payment->payment_date = null ;
         $payment->save();
+
         return redirect()->back();
     }
 }

@@ -49,4 +49,8 @@ class House extends Model
     {
         return $this->hasMany(Category::class);
     }
+
+    public function expences():HasMany{
+        return $this->hasMany(Expences::class);
+    }
 }

@@ -29,4 +29,7 @@ class Expences extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function house(): BelongsTo{
+        return $this->belongsTo(House::class, 'house_id');
+    }
 }

@@ -16,7 +16,13 @@ class PaymentPending extends Model
         'expence_id'
     ];
     use SoftDeletes;
+
     public function owner(): BelongsTo{
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function expence():BelongsTo{
+        
+        return $this->belongsTo(Expences::class,'expence_id');
     }
 }

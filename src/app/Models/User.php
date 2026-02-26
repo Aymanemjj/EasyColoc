@@ -56,7 +56,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function fullname(){
+    public function fullname()
+    {
         return $this->firstname . " " . $this->lastname;
     }
 
@@ -77,13 +78,37 @@ class User extends Authenticatable
         return $this->house->isEmpty() ? true : false;
     }
 
-    public function pfp(){
-        $pfp = substr($this->firstname, 0,1) . substr($this->lastname, 0,1);
+    public function pfp()
+    {
+        $pfp = substr($this->firstname, 0, 1) . substr($this->lastname, 0, 1);
         return strtoupper($pfp);
-
     }
 
-    public function needToPay(): HasMany{
+    public function allPayments(): HasMany
+    {
         return $this->hasMany(PaymentPending::class);
+    }
+
+    public function needToPay($id)
+    {
+        $toPay = [];
+        foreach ($this->allPayments as $payment) {
+
+/*          
+            echo 'expence :';
+            echo PHP_EOL;
+            echo $payment->expence;
+            echo PHP_EOL;
+            echo "---------------------------------";
+            echo 'house :';
+            echo PHP_EOL;
+            echo $payment->expence->house;
+            echo PHP_EOL;
+            echo "---------------------------------";
+ */
+            if ( $payment->expence->house->id == $id) array_push($toPay, $payment);
+        }
+
+        return $toPay;
     }
 }

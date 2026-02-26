@@ -49,13 +49,15 @@ class HouseController extends Controller
         return view('house', compact('house', 'categories', 'expences'));
     }
 
-    public function exit($id) {
+    public function exit($id)
+    {
         $house = House::find($id);
-        dd($house->user->pivote);
-        foreach ($house->user as $user) {
 
-            if($user->id === auth()->user()->id) $user->delete();
+        foreach ($house->user as $user) {
+            if ($user->id === auth()->user()->id) $user->pivot->delete();
         }
+        
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -80,6 +82,7 @@ class HouseController extends Controller
     public function destroy($id)
     {
         $house = House::find($id);
+        $house ->status = false;
         $house->delete();
         return redirect()->route('dashboard');
     }

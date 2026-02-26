@@ -94,7 +94,7 @@
                             <div>
                                 <h3>Your Expenses</h3>
                                 <div class="flex flex-col gap-2">
-                                    @foreach (auth()->user()->needToPay as $expence)
+                                    @foreach (auth()->user()->needToPay($house->id) as $expence)
                                     @if($expence->status)
                                         <?php $color = 'green-600'; $status = 'payed'; ?>
                                     @else
