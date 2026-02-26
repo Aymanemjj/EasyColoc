@@ -87,23 +87,29 @@
                         </table>
                     </div>
                 </div>
-                {{-- Expences --}}
+                {{-- User Expences --}}
                 <div class="col-span-2 flex flex-col gap-4">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
                             <div>
-                                <h3>Expenses</h3>
+                                <h3>Your Expenses</h3>
                                 <div class="flex flex-col gap-2">
-                                    @foreach ($expences as $expence)
-                                        <div class="bg-gray-900 rounded-md p-2 border-r-4 border-green-600">
+                                    @foreach (auth()->user()->needToPay as $expence)
+                                    @if($expence->status)
+                                        <?php $color = 'green-600'; $status = 'payed'; ?>
+                                    @else
+                                        <?php $color = 'yellow-600'; $status = 'pending'; ?>
+                                    @endif
+                                        <div class="bg-gray-900 rounded-md p-2 border-r-4 border-{{$color}}">
                                             <h4>{{ $expence->owner->fullname() }}</h4>
                                             <div class="flex justify-between">
                                                 <small>{{ $expence->amount }} $</small>
-                                                <form action="" method="post">
+                                                <form action="{{ route('expence.pay'), $$expence->id }}" method="post">
                                                     @csrf
                                                     @method('PATCH')
+
                                                     <button type="submit"
-                                                        class="bg-green-600 bg-opacity-30 border-2 border-green-600 px-1 rounded-md text-xs">Payed</button>
+                                                        class="bg-{{$color}} bg-opacity-30 border-2 border-{{$color}} px-1 rounded-md text-xs">{{$status}}</button>
                                                 </form>
 
                                             </div>

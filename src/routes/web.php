@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpencesController;
 use App\Http\Controllers\HouseController;
+use App\Http\Controllers\PaymentPendingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,9 @@ Route::post('/house/{id}/expence/create', [ExpencesController::class, 'store'])-
 Route::get('/house/{id}/expence/edit', [ExpencesController::class, 'edit'])->name('expence.edit');
 Route::put('/house/{id}/expence/edit', [ExpencesController::class, 'update'])->name('expence.update');
 Route::delete('/house/{id}/expence/delete', [ExpencesController::class, 'destroy'])->name('expence.destroy');
+
+Route::patch('/house/{id}/expence/status', [PaymentPendingController::class, 'statusChange'])->name('expence.pay');
+
 
 
 Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -80,5 +81,9 @@ class User extends Authenticatable
         $pfp = substr($this->firstname, 0,1) . substr($this->lastname, 0,1);
         return strtoupper($pfp);
 
+    }
+
+    public function needToPay(): HasMany{
+        return $this->hasMany(PaymentPending::class);
     }
 }

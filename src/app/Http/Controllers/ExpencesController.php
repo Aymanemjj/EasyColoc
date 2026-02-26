@@ -25,7 +25,7 @@ class ExpencesController extends Controller
      */
     public function create($id)
     {
-        
+
         $house = House::find($id);
         return view('expenceCreate', compact('house'));
     }
@@ -33,7 +33,7 @@ class ExpencesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreExpencesRequest $request, $id)
+    public function store(StoreExpencesRequest $request, $id, PaymentPendingController $PPC)
     {
         $validated = $request->validated();
         $validated['date'] = substr($validated['date'], 0, 7);
@@ -45,7 +45,7 @@ class ExpencesController extends Controller
             ]);
         }
 
-        Expences::create([
+        /*         Expences::create([
             'title' => $validated['title'],
             'amount' => $validated['amount'],
             'date' => $validated['date'],
@@ -53,6 +53,16 @@ class ExpencesController extends Controller
             'house_id' => $id,
             'category_id' => $validated['category_id']
         ]);
+ */
+        $expence = new Expences();
+        foreach ($validated as $key => $value) {
+            $expence->$key = $value;
+        }
+        $expence->house_id = $id;
+        $expence->save();
+
+        $PPC->create($expence);
+
         return redirect()->route('house.show', $id);
     }
 
