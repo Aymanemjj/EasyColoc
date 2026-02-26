@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateExpencesRequest;
 use App\Models\Category;
 use App\Models\Expences;
 use App\Models\House;
+use App\Models\PaymentPending;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -102,6 +103,10 @@ class ExpencesController extends Controller
     public function destroy($id)
     {
         $expence = Expences::find($id);
+        $payments = PaymentPending::where('expence_id', $expence->id)->get();
+        foreach ($payments as $payment) {
+            $payment->delete();
+        }
         $expence->delete();
         return redirect()->back();
     }

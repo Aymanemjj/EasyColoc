@@ -49,7 +49,14 @@ class HouseController extends Controller
         return view('house', compact('house', 'categories', 'expences'));
     }
 
-    public function exit() {}
+    public function exit($id) {
+        $house = House::find($id);
+        dd($house->user->pivote);
+        foreach ($house->user as $user) {
+
+            if($user->id === auth()->user()->id) $user->delete();
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.

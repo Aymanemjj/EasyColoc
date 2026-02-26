@@ -25,7 +25,7 @@ class House extends Model
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot(['is_owner']);
+            ->withPivot(['is_owner', 'deleted_at', 'banned']);
     }
 
     public function owner()

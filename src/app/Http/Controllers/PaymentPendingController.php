@@ -25,7 +25,6 @@ class PaymentPendingController extends Controller
         }
 
         $payment = PaymentPending::where('user_id', $expence->user_id)->where('expence_id', $expence->id)->get();
-
         $payment[0]->status = true;
         $payment[0]->save();
     }

@@ -21,7 +21,7 @@
                                     style="color: rgb(231, 24, 24);"></i></button>
                         </form>
                     @endif
-                    <form action="{{ route('house.exit', $house) }}" method="POST">
+                    <form action="{{ route('house.exit', $house->id) }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <button
