@@ -104,7 +104,7 @@
                                             <h4>{{ $expence->owner->fullname() }}</h4>
                                             <div class="flex justify-between">
                                                 <small>{{ $expence->amount }} $</small>
-                                                <form action="{{ route('expence.pay'), $$expence->id }}" method="post">
+                                                <form action="{{ route('expence.pay', $expence->id) }}" method="post">
                                                     @csrf
                                                     @method('PATCH')
 

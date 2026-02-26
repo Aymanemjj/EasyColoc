@@ -24,15 +24,17 @@ class PaymentPendingController extends Controller
             $payment->save();
         }
 
-        $payment = PaymentPending::where('user_id',$expence->user_id)->where('expence_id', $expence->id)->get();
+        $payment = PaymentPending::where('user_id', $expence->user_id)->where('expence_id', $expence->id)->get();
 
         $payment[0]->status = true;
         $payment[0]->save();
     }
 
-    public function statusChange($id){
-        $payment = PaymentPending::fing($id);
+    public function statusChange($id)
+    {
+        $payment = PaymentPending::find($id);
         $payment->status = !$payment->status;
         $payment->save();
+        return redirect()->back();
     }
 }
