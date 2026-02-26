@@ -20,11 +20,11 @@
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
-                            @if($house->pivot->is_owner)
+                            @if($house->authIsOwner())
                                 <small class="bg-yellow-500 text-black p-2 rounded-md">Owner</small>
                             @endif
 
-                            <a href="house/details/{{$house->id}}">{{ $house->title }}</a>
+                            <a href="house/{{$house->id}}/details">{{ $house->title }}</a>
 
                             <small class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{$house->description}}</small>
                             

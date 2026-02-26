@@ -35,12 +35,18 @@ class House extends Model
             ->withPivot(['is_owner'])
             ->wherePivot('is_owner', 1);
     }
-    public function isOwner()
+    public function authIsOwner()
     {
-        return $this->owner[0]->id == Auth::user()->id ? true : false;
+        return $this->owner[0]->id == Auth::user()->id;
     }
 
-    public function categories():HasMany{
+    public function userIsOwner($user)
+    {
+        return $this->owner[0]->id == $user->id;
+    }
+
+    public function categories(): HasMany
+    {
         return $this->hasMany(Category::class);
     }
 }

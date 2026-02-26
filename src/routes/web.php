@@ -24,21 +24,27 @@ Route::get('/create-house', function(){
     return redirect()->route("house.create");
 });
 
-Route::patch('/house/details/{id}',[HouseController::class, 'exit'])->name('house.exit');
-Route::get('/house/details/{id}',[HouseController::class, 'show'])->name('house.show');
+Route::patch('/house/{id}/details',[HouseController::class, 'exit'])->name('house.exit');
+Route::delete('/house/{id}/details',[HouseController::class, 'destroy'])->name('house.destroy');
+Route::get('/house/{id}/details',[HouseController::class, 'show'])->name('house.show');
 
-Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');
-Route::post('/house/{id}/category/create', [CategoryController::class, 'store'])->name('category.store');
 
 
 Route::get('/house/{id}/expence/create', [ExpencesController::class, 'create'])->name('expence.create');
 Route::post('/house/{id}/expence/create', [ExpencesController::class, 'store'])->name('expence.store');
 Route::get('/house/{id}/expence/edit', [ExpencesController::class, 'edit'])->name('expence.edit');
 Route::put('/house/{id}/expence/edit', [ExpencesController::class, 'update'])->name('expence.update');
-Route::delete('/house/{id}/', [ExpencesController::class, 'destroy'])->name('expence.destroy');
+Route::delete('/house/{id}/expence/delete', [ExpencesController::class, 'destroy'])->name('expence.destroy');
+
+
+Route::get('/house/{id}/category/create', [CategoryController::class, 'create'])->name('category.create');
+Route::post('/house/{id}/category/create', [CategoryController::class, 'store'])->name('category.store');
+Route::get('/house/{id}/category/edit', [CategoryController::class, 'edit'])->name('category.edit');
+Route::put('/house/{id}/category/edit', [CategoryController::class, 'update'])->name('category.update');
+Route::delete('/house/{id}/category/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
+
 
 require __DIR__.'/auth.php';
 
 
 Route::resource('house', HouseController::class);
-Route::resource('category', CategoryController::class);

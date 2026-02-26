@@ -22,7 +22,7 @@
             <div class="mt-4">
                 <x-input-label for="expence_amount" :value="__('Amount')" />
 
-                <x-text-input id="expence_amount" class="block mt-1 w-full" type="number" name="amount"
+                <x-text-input id="expence_amount" class="block mt-1 w-full" type="number" step="0.01" name="amount"
                     required></x-text-input>
 
                 <x-input-error :messages="$errors->get('expence_amount')" class="mt-2" />

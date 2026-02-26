@@ -11,8 +11,8 @@
                         class="fa-solid fa-crown fa-xs" style="color: rgb(255, 212, 59);"></i> Owner:
                     {{ $house->owner[0]->fullname() }}</small>
                 <div class="flex gap-2">
-                    @if ($house->isOwner())
-                        <form action="{{ route('house.destroy', $house) }}" method="POST">
+                    @if ($house->authIsOwner())
+                        <form action="{{ route('house.destroy', $house->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button
@@ -65,7 +65,8 @@
                                         <td class="border-r px-2">{{ $expence->amount }} $</td>
                                         <td class="border-l text-right px-2">
                                             <div class="flex gap-2 justify-end">
-                                                <button><a href="{{ route('expence.edit', $expence->id) }}"><i class="fa-solid fa-pen-to-square fa-xs"
+                                                <button><a href="{{ route('expence.edit', $expence->id) }}"><i
+                                                            class="fa-solid fa-pen-to-square fa-xs"
                                                             style="color: rgb(255, 212, 59);"></i></a></button>
                                                 <form action="{{ route('expence.destroy', $expence->id) }}"
                                                     method="post">
@@ -86,7 +87,7 @@
                         </table>
                     </div>
                 </div>
-                {{-- House Members --}}
+                {{-- Expences --}}
                 <div class="col-span-2 flex flex-col gap-4">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
@@ -113,17 +114,30 @@
 
                         </div>
                     </div>
+                    {{-- Categories --}}
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
                             <div>
                                 <h3>Categories</h3>
                                 <div>
                                     @foreach ($categories as $category)
-                                        <div>
+                                        <div class="flex justify-between">
                                             <small>{{ $category->name }}</small>
-                                            <div>
-
-                                            </div>
+                                            @if ($house->authIsOwner())
+                                                <div class="flex gap-2 justify-end">
+                                                    <button><a href="{{ route('category.edit', $category->id) }}"><i
+                                                                class="fa-solid fa-pen-to-square fa-xs"
+                                                                style="color: rgb(255, 212, 59);"></i></a></button>
+                                                    <form action="{{ route('category.destroy', $category->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"><i class="fa-regular fa-trash-can fa-xs"
+                                                                style="color: rgb(231, 24, 24);"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -131,30 +145,36 @@
 
                         </div>
                     </div>
-
+                    {{-- Members --}}
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
                             <div>
                                 <h3>Members</h3>
                                 <div>
                                     @foreach ($house->user as $user)
-                                        <div class="flex justify-between">
+                                        <div class="flex justify-between align-bottom">
                                             <small>{{ $user->fullname() }}</small>
                                             <div class="flex gap-1">
-                                                <form action="">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit"><i class="fa-solid fa-crown fa-xs"
-                                                            style="color: rgb(255, 212, 59);"></i>
-                                                    </button>
-                                                </form>
-                                                <form action="">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit"><i class="fa-solid fa-ban fa-flip-both fa-sm"
-                                                            style="color: rgb(255, 59, 59);"></i>
-                                                    </button>
-                                                </form>
+                                                @if ($house->userIsOwner($user))
+                                                    <i class="fa-solid fa-crown fa-xs"
+                                                        style="color: rgb(255, 212, 59);"></i>
+                                                @else
+                                                    <form action="">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"><i class="fa-solid fa-crown fa-xs"
+                                                                style="color: rgb(255, 212, 59);"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form action="">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"><i
+                                                                class="fa-solid fa-ban fa-flip-both fa-sm"
+                                                                style="color: rgb(255, 59, 59);"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
 
 
                                             </div>

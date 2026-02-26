@@ -14,9 +14,7 @@ class HouseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -37,7 +35,7 @@ class HouseController extends Controller
             'description' => $validated['description']
         ])->user()->attach(Auth::user(), ['is_owner' => 1]);
 
-        return redirect()->route('house.index');
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -51,9 +49,7 @@ class HouseController extends Controller
         return view('house', compact('house', 'categories', 'expences'));
     }
 
-    public function exit(){
-
-    }
+    public function exit() {}
 
     /**
      * Show the form for editing the specified resource.
@@ -74,8 +70,10 @@ class HouseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(House $house)
+    public function destroy($id)
     {
-        //
+        $house = House::find($id);
+        $house->delete();
+        return redirect()->route('dashboard');
     }
 }

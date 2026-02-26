@@ -36,7 +36,7 @@ class CategoryController extends Controller
             'house_id' => $id
         ]);
 
-        return redirect()->back();
+        return redirect()->route('house.show', $id);
     }
 
     /**
@@ -50,24 +50,31 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        $house = House::find($category->house_id);
+        return view('categoryEdit', compact('house', 'category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+        $category =  Category::find($id);
+        $category->update($validated);
+        return redirect()->route('house.show', $category->house_id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+        $category->delete();
+        return redirect()->back();
     }
 }

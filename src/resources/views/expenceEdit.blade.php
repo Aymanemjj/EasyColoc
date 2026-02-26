@@ -24,7 +24,7 @@
             <div class="mt-4">
                 <x-input-label for="expense_amount" :value="__('Amount')" />
 
-                <x-text-input id="expense_amount" class="block mt-1 w-full" type="number" name="amount"
+                <x-text-input id="expense_amount" class="block mt-1 w-full" type="number" step="0.01" name="amount"
                     value="{{ $expence->amount }}" required></x-text-input>
 
                 <x-input-error :messages="$errors->get('expense_amount')" class="mt-2" />
@@ -53,7 +53,9 @@
                     <option value="{{ $expence->category->id }}">{{ $expence->category->name }}</option>
 
                     @foreach ($house->categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @if ($category->id != $expence->category->id)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endif
                     @endforeach
                 </select>
 
