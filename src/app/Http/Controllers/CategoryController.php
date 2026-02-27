@@ -36,7 +36,11 @@ class CategoryController extends Controller
             'house_id' => $id
         ]);
 
-        return redirect()->route('house.show', $id);
+        return redirect()->route('house.show', $id)
+            ->withErrors([
+                'type' => 1,
+                'general' => "Category created"
+            ]);
     }
 
     /**
@@ -65,7 +69,11 @@ class CategoryController extends Controller
         $validated = $request->validated();
         $category =  Category::find($id);
         $category->update($validated);
-        return redirect()->route('house.show', $category->house_id);
+        return redirect()->route('house.show', $category->house_id)
+            ->withErrors([
+                'type' => 1,
+                'general' => "Category edited"
+            ]);
     }
 
     /**

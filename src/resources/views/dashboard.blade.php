@@ -4,7 +4,11 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-
+    @if ($errors->get('type'))
+        <x-message-success :messages="$errors->get('general')" class="mt-2" />
+    @else
+        <x-message-error :messages="$errors->get('general')" class="mt-2" />
+    @endif
     <div class="py-12 ">
         @if (auth()->user()->notReserved())
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -19,14 +23,15 @@
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
-                            @if($house->authIsOwner())
+                            @if ($house->authIsOwner())
                                 <small class="bg-yellow-500 text-black p-2 rounded-md">Owner</small>
                             @endif
 
-                            <a href="house/{{$house->id}}/details">{{ $house->title }}</a>
+                            <a href="house/{{ $house->id }}/details">{{ $house->title }}</a>
 
-                            <small class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{$house->description}}</small>
-                            
+                            <small
+                                class="bg-gray-500 dark:bg-slate-700 rounded-md p-2">{{ $house->description }}</small>
+
                         </div>
                     </div>
                 </div>

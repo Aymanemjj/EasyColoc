@@ -38,7 +38,11 @@ class HouseController extends Controller
             'description' => $validated['description']
         ])->user()->attach(Auth::user(), ['is_owner' => 1]);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')
+            ->withErrors([
+                'type' => 1,
+                'general' => "House created successfully"
+            ]);
     }
 
     /**
@@ -58,16 +62,32 @@ class HouseController extends Controller
     {
         $house = House::find($id);
         $Auser = auth()->user();
-        foreach ($house->user as $user) {
-            if ($user->id === $Auser->id) $user->pivot->delete();
+
+        if (count($house->user) > 1) {
+            return redirect()->back()
+                ->withErrors([
+                    'type' => 0,
+                    'general' => "You can't leave as Owner when someone else is present"
+                ]);
         }
+
         if (count($Auser->needToPay($house->id)) > 0) {
             $Auser->reputation - 1;
         } else {
             $Auser->reputation + 1;
         }
 
-        return redirect()->route('dashboard');
+        foreach ($house->user as $user) {
+            if ($user->id === $Auser->id) $user->pivot->delete();
+        }
+
+        $Auser->save();
+
+        return redirect()->route('dashboard')
+            ->withErrors([
+                'type' => 1,
+                'general' => "You left the House"
+            ]);
     }
 
     public function cleanHouse($house) {}
@@ -87,15 +107,15 @@ class HouseController extends Controller
             default:
                 break;
         }
+        return redirect()->back();
     }
     public function promote($house, $user)
     {
         foreach ($house->user as $Uuser) {
             if ($Uuser->id == $user->id) $Uuser->pivot->is_owner = 1;
             if ($Uuser->id == auth()->user()->id) $Uuser->pivot->is_owner = 0;
+            $Uuser->pivot->save();
         }
-
-        return redirect()->back();
     }
     public function kickUser($house, $user)
     {
@@ -117,8 +137,6 @@ class HouseController extends Controller
                 if ($Uuser->id == $user->id) $Uuser->pivot->delete();
             }
         }
-
-        return redirect()->back();
     }
 
     /**
@@ -142,9 +160,14 @@ class HouseController extends Controller
      */
     public function destroy($id)
     {
-        if (count(auth()->user()->needToPay()) == 0) {
+        if (count(auth()->user()->needToPay($id)) == 0) {
             $house = House::find($id);
             $house->status = false;
+
+            foreach ($house->user as $Uuser) {
+                $Uuser->pivot->delete();
+            }
+
             $house->delete();
             return redirect()->route('dashboard')
                 ->withErrors([

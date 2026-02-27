@@ -15,8 +15,11 @@
             @endif
         </div>
     </x-slot>
-    <x-input-error :messages="$errors->get('user_id')" class="mt-2" />
-
+    @if (!$errors->get('type'))
+        <x-message-success :messages="$errors->get('general')" class="mt-2" />
+    @else
+        <x-message-error :messages="$errors->get('general')" class="mt-2" />
+    @endif
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-2">
             <div class=" flex justify-between">

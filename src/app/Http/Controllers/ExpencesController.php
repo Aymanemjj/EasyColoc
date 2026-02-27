@@ -46,15 +46,7 @@ class ExpencesController extends Controller
             ]);
         }
 
-        /*         Expences::create([
-            'title' => $validated['title'],
-            'amount' => $validated['amount'],
-            'date' => $validated['date'],
-            'user_id' => $validated['user_id'],
-            'house_id' => $id,
-            'category_id' => $validated['category_id']
-        ]);
- */
+
         $expence = new Expences();
         foreach ($validated as $key => $value) {
             $expence->$key = $value;
@@ -64,7 +56,11 @@ class ExpencesController extends Controller
 
         $PPC->create($expence);
 
-        return redirect()->route('house.show', $id);
+        return redirect()->route('house.show', $id)
+            ->withErrors([
+                'type' => 1,
+                'general' => "Expence created"
+            ]);
     }
 
     /**
@@ -94,7 +90,11 @@ class ExpencesController extends Controller
         $validated = $request->validated();
         $expence = Expences::find($id);
         $expence->update($validated);
-        return redirect()->route('house.show', $expence->house_id);
+        return redirect()->route('house.show', $expence->house_id)
+            ->withErrors([
+                'type' => 1,
+                'general' => "Expence Edited"
+            ]);
     }
 
     /**
