@@ -112,7 +112,7 @@
                 <div class="col-span-2 flex flex-col gap-4">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
-                            <div>
+                            <div class="flex flex-col gap-4">
                                 <h3>Your Expenses</h3>
                                 <div class="flex flex-col gap-2">
                                     @foreach (auth()->user()->needToPay($house->id) as $expence)
@@ -146,7 +146,7 @@
                     {{-- Categories --}}
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
-                            <div>
+                            <div class="flex flex-col gap-4">
                                 <h3>Categories</h3>
                                 <div>
                                     @foreach ($categories as $category)
@@ -177,8 +177,19 @@
                     {{-- Members --}}
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ">
                         <div class="p-6 text-gray-900 dark:text-gray-100 flex flex-col">
-                            <div>
-                                <h3>Members</h3>
+                            <div class="flex flex-col gap-4">
+                                <div class="flex justify-between">
+                                    <h3>Members</h3>
+                                    <form
+                                        action="{{ route('invite.create', ['id' => $house->id]) }}"
+                                        method="post">
+                                        @csrf
+                                        <button type="submit" name="invite"><i
+                                                class="fa-regular fa-share-from-square fa-xs"
+                                                style="color: rgb(235, 235, 235);"></i>
+                                        </button>
+                                    </form>
+                                </div>
                                 <div>
                                     @foreach ($house->user as $user)
                                         <div class="flex justify-between align-bottom">

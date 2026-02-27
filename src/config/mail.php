@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => env('MAIL_MAILER', 'smtp'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,11 +31,14 @@ return [
     |
     | Supported: "smtp", "sendmail", "mailgun", "ses", "ses-v2",
     |            "postmark", "resend", "log", "array",
-    |            "failover", "roundrobin"
+    |            "failover", "roundrobin", "mailtrap"
     |
     */
 
     'mailers' => [
+        'mailtrap' => [
+            'transport' =>'mailtrap'
+        ],
 
         'smtp' => [
             'transport' => 'smtp',

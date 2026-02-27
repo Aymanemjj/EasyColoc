@@ -3,8 +3,12 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpencesController;
 use App\Http\Controllers\HouseController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PaymentPendingController;
 use App\Http\Controllers\ProfileController;
+use App\Mail\Invitation;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,8 +51,15 @@ Route::get('/house/{id}/category/edit', [CategoryController::class, 'edit'])->na
 Route::put('/house/{id}/category/edit', [CategoryController::class, 'update'])->name('category.update');
 Route::delete('/house/{id}/category/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
 
+Route::get('/house/{id}/invite/create', [InviteController::class, 'create'])->name('invite.create');
 
 require __DIR__.'/auth.php';
 
 
 Route::resource('house', HouseController::class);
+
+Route::get('/testemail', function(){
+    $from = auth()->user()->id;
+    $to = 'easycoloc@testing.com';
+    Mail::to($to)->send(new Invitation());
+});
