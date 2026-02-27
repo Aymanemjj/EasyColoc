@@ -52,6 +52,7 @@ Route::put('/house/{id}/category/edit', [CategoryController::class, 'update'])->
 Route::delete('/house/{id}/category/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
 
 Route::get('/house/{id}/invite/create', [InviteController::class, 'create'])->name('invite.create');
+Route::post('/house/{id}/invite/create', [InviteController::class, 'store'])->name('invite.store');
 
 require __DIR__.'/auth.php';
 

@@ -180,15 +180,7 @@
                             <div class="flex flex-col gap-4">
                                 <div class="flex justify-between">
                                     <h3>Members</h3>
-                                    <form
-                                        action="{{ route('invite.create', ['id' => $house->id]) }}"
-                                        method="post">
-                                        @csrf
-                                        <button type="submit" name="invite"><i
-                                                class="fa-regular fa-share-from-square fa-xs"
-                                                style="color: rgb(235, 235, 235);"></i>
-                                        </button>
-                                    </form>
+                                    <x-nav-link :href="route('invite.create', $house->id)">{{ __('Invite a new membre') }}</x-nav-link>
                                 </div>
                                 <div>
                                     @foreach ($house->user as $user)
