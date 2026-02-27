@@ -14,7 +14,7 @@
             <div class="mt-4">
                 <x-input-label for="email" :value="__('Email')" />
 
-                <x-text-input id="email" class="block mt-1 w-full" type="text" name="email" required />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" required />
 
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
@@ -23,7 +23,7 @@
             <div class="mt-4">
                 <x-input-label for="title" :value="__('Title')" />
 
-                <x-text-input id="title" class="block mt-1 w-full" type="email" name="title" required />
+                <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" required />
 
                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
             </div>

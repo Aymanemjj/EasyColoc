@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Invite;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,33 +19,36 @@ class Invitation extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+
+    private Invite $invitation;
+
+    public function __construct($invitation)
     {
-        //
+        $this->invitation = $invitation;
     }
 
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
-    {   
-        $from = auth()->user();
-        return new Envelope(
-            subject: 'Invitation',
-            from: new Address("$from->email", "" . $from->fullname() . "")
-        );
+    {
 
+        return new Envelope(
+            subject: 'House invitation',
+            from: new Address("" . $this->invitation->sender->email, "" . $this->invitation->sender->fullname() . "")
+        );
     }
 
     /**
      * Get the message content definition.
      */
     public function content(): Content
-    {   
-        $from = auth()->user();
+    {
         return new Content(
-            view: 'mail.test-email',
-            with: ['from' => $from]
+            view: 'mail.houseInvitation',
+            with: [
+                'invitation' => $this->invitation,
+            ]
         );
     }
 
