@@ -38,6 +38,10 @@ class PaymentPendingController extends Controller
         $payment->status ? $payment->payment_date = Carbon::today()->toDateString() : $payment->payment_date = null ;
         $payment->save();
 
-        return redirect()->back();
+        return redirect()->back()
+        ->withErrors([
+                'type' => 1,
+                'general' => "Expence payed"
+            ]);
     }
 }

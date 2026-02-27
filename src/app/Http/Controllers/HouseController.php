@@ -64,11 +64,9 @@ class HouseController extends Controller
         $Auser = auth()->user();
 
         if (count($house->user) > 1) {
-            return redirect()->back()
-                ->withErrors([
-                    'type' => 0,
-                    'general' => "You can't leave as Owner when someone else is present"
-                ]);
+            $collection = $house->user;
+            $sorted = $collection->sortByDesc('reputation');
+            $this->promote($house, $sorted[0]);
         }
 
         if (count($Auser->needToPay($house->id)) > 0) {
@@ -78,7 +76,7 @@ class HouseController extends Controller
         }
 
         foreach ($house->user as $user) {
-            if ($user->id === $Auser->id) $user->pivot->delete();
+            if ($user->id === $Auser->id) $user->pivot->status = 0;
         }
 
         $Auser->save();
@@ -162,13 +160,13 @@ class HouseController extends Controller
     {
         if (count(auth()->user()->needToPay($id)) == 0) {
             $house = House::find($id);
-            $house->status = false;
 
             foreach ($house->user as $Uuser) {
-                $Uuser->pivot->delete();
+                $Uuser->pivot->status = 0;
             }
 
-            $house->delete();
+            $house->status = false;
+
             return redirect()->route('dashboard')
                 ->withErrors([
                     "type" => 1,
