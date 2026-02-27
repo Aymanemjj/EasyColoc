@@ -15,7 +15,8 @@
             @endif
         </div>
     </x-slot>
-    @if ($errors->get('type'))
+
+    @if (array_first($errors->get('type')))
         <x-message-success :messages="$errors->get('general')" class="mt-2" />
     @else
         <x-message-error :messages="$errors->get('general')" class="mt-2" />

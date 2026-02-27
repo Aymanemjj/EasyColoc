@@ -1,8 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <div class="flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Dashboard') }}
+            </h2>
+            @if (auth()->user()->reputation >= 0)
+                <div class="font-semibold text-lg text-gray-800 dark:text-green-600 leading-tight">
+                    <h2>Your reputation: {{ auth()->user()->reputation }}</h2>
+                </div>
+            @else
+                <div class="font-semibold text-lg text-gray-800 dark:text-red-600 leading-tight">
+                    <h2>Your reputation: {{ auth()->user()->reputation }}</h2>
+                </div>
+            @endif
+        </div>
+
     </x-slot>
     @if ($errors->get('type'))
         <x-message-success :messages="$errors->get('general')" class="mt-2" />

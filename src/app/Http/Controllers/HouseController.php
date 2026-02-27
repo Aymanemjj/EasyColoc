@@ -66,17 +66,28 @@ class HouseController extends Controller
         if (count($house->user) > 1) {
             $collection = $house->user;
             $sorted = $collection->sortByDesc('reputation');
-            $this->promote($house, $sorted[0]);
-        }
 
-        if (count($Auser->needToPay($house->id)) > 0) {
-            $Auser->reputation - 1;
+            if ($Auser->id == $house->owner[0]->id) {
+                $this->promote($house, $sorted[1]);
+            } else {
+                $this->promote($house, $sorted[0]);
+            }
+        }
+        $payments = $Auser->needToPay($house->id);
+        if (count($payments) > 0) {
+            $Auser->reputation -= 1;
+            foreach ($payments as $payment) {
+                $payment->delete();
+            }
         } else {
-            $Auser->reputation + 1;
+            $Auser->reputation += 1;
         }
 
         foreach ($house->user as $user) {
-            if ($user->id === $Auser->id) $user->pivot->status = 0;
+            if ($user->id === $Auser->id) {
+                $user->pivot->status = 0;
+                $user->pivot->delete();
+            }
         }
 
         $Auser->save();
@@ -158,11 +169,13 @@ class HouseController extends Controller
      */
     public function destroy($id)
     {
-        if (count(auth()->user()->needToPay($id)) == 0) {
-            $house = House::find($id);
+        $house = House::find($id);
 
+        if (count(auth()->user()->needToPay($house->id)) == 0 && count($house->user) == 1) {
+            
             foreach ($house->user as $Uuser) {
                 $Uuser->pivot->status = 0;
+                $Uuser->pivot->delete();
             }
 
             $house->status = false;
@@ -176,7 +189,7 @@ class HouseController extends Controller
             return redirect()->back()
                 ->withErrors([
                     'type' => 0,
-                    'general' => "You can't cancel when you have pending payments"
+                    'general' => "You can't cancel when you, the Owner, have pending payments"
                 ]);
         }
     }
