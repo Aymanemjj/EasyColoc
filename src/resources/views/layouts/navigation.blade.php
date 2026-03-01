@@ -18,6 +18,10 @@
                     @if (auth()->user()->notReserved())
                         <x-nav-link :href="route('house.create')">{{ __('Create house') }}</x-nav-link>
                     @endif
+                    @if (auth()->user()->isAdmin())
+                        <x-nav-link :href="route('admin.dashboard')">{{ __('Administration') }}</x-nav-link>
+                    @endif
+
                 </div>
             </div>
             <div class="flex gap-2">

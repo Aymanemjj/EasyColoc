@@ -66,6 +66,10 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id');
     }
 
+    public function isAdmin(){
+        return $this->role->name == "admin";
+    }
+
     public function house(): BelongsToMany
     {
         return $this->belongsToMany(House::class)
@@ -97,7 +101,6 @@ class User extends Authenticatable
             if ($payment->expence->house->id == $id && !$payment->status) array_push($toPay, $payment);
 
         }
-
 
         return $toPay;
     }

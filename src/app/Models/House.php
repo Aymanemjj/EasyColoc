@@ -43,7 +43,7 @@ class House extends Model
 
     public function authIsOwner()
     {
-        return $this->owner[0]->id == Auth::user()->id;
+        return $this->owner->first()->id == Auth::user()->id;
     }
 
     public function userIsOwner($user)
