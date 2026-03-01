@@ -30,7 +30,7 @@ class ExpencesController extends Controller
 
         $house = House::find($id);
 
-        Gate::authorize('create', $house, Expences::class);
+        Gate::authorize('create', [Expences::class, $house]);
 
         return view('expenceCreate', compact('house'));
     }

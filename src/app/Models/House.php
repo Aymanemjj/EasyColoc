@@ -36,9 +36,9 @@ class House extends Model
             ->wherePivot('is_owner', 1);
     }
 
-    public function isMembre($user){
-        $membres = $this->user();
-        return $membres->contains('id', $user->id);
+    public function isMembre($user)
+    {
+        return $this->user->contains('id', $user->id);
     }
 
     public function authIsOwner()
@@ -56,11 +56,13 @@ class House extends Model
         return $this->hasMany(Category::class);
     }
 
-    public function expences():HasMany{
+    public function expences(): HasMany
+    {
         return $this->hasMany(Expences::class);
     }
 
-    public function addMember($user){
+    public function addMember($user)
+    {
         $this->user()->attach($user, ['is_owner' => 0]);
     }
 }

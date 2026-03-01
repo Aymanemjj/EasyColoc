@@ -25,10 +25,10 @@ class HouseController extends Controller
      */
     public function create()
     {
-
+        
         Gate::authorize('create', House::class);
 
-        if (!auth()->user()->notReserved()) {
+        if (!auth()->user()->notReserved() && auth()->user()->role->name != 'admin') {
             return redirect()->route('dashboard')
                 ->withErrors([
                     'type' => 0,
@@ -88,7 +88,10 @@ class HouseController extends Controller
             } else {
                 $this->promote($house, $sorted[0]);
             }
+        }else{
+            $this->destroy($house->id);
         }
+
         $payments = $Auser->needToPay($house->id);
         if (count($payments) > 0) {
             $Auser->reputation -= 1;
@@ -107,6 +110,8 @@ class HouseController extends Controller
         }
 
         $Auser->save();
+
+
 
         return redirect()->route('dashboard')
             ->withErrors([
@@ -204,6 +209,8 @@ class HouseController extends Controller
             }
 
             $house->status = false;
+            $house->save();
+            $house->delete();
 
             return redirect()->route('dashboard')
                 ->withErrors([
@@ -214,7 +221,7 @@ class HouseController extends Controller
             return redirect()->back()
                 ->withErrors([
                     'type' => 0,
-                    'general' => "You can't cancel when you, the Owner, have pending payments"
+                    'general' => "You can't cancel or leave when you, the Owner, have pending payments or are not alone"
                 ]);
         }
     }

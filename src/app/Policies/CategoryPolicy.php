@@ -28,11 +28,10 @@ class CategoryPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, House $house): bool
-    {
+    public function createCategory(User $user, House $house): bool
+    {   
         return $house->userIsOwner($user);
     }
-
     /**
      * Determine whether the user can update the model.
      */

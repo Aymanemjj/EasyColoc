@@ -23,8 +23,8 @@ class CategoryController extends Controller
     {
         $house = House::find($id);
 
-        Gate::authorize('create', $house, Category::class);
-
+        Gate::authorize('createCategory', [Category::class, $house]);
+        
         return view('categoryCreate', compact('house'));
     }
 

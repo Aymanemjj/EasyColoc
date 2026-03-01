@@ -28,7 +28,7 @@ class HousePolicy
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
-    {
+    {   
         return $user->role->name == 'admin' || ($user->status == true && $user->notReserved());
     }
 
@@ -37,7 +37,7 @@ class HousePolicy
      */
     public function update(User $user, House $house)
     {
-        return $house->userIsOwner($user);
+        return $house->authIsOwner();
     }
 
     /**
@@ -45,17 +45,17 @@ class HousePolicy
      */
     public function delete(User $user, House $house)
     {
-        return $house->userIsOwner($user);
+        return $house->authIsOwner();
     }
 
     public function kickUser(User $user, House $house)
     {
-        return $house->userIsOwner($user);
+        return $house->authIsOwner();
     }
 
     public function promote(User $user, House $house)
     {
-        return $house->userIsOwner($user);
+        return $house->authIsOwner();
     }
 
     /**

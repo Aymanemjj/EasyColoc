@@ -7,7 +7,7 @@ use App\Models\House;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ExpencePolicy
+class ExpencesPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -29,7 +29,8 @@ class ExpencePolicy
      * Determine whether the user can create models.
      */
     public function create(User $user, House $house): bool
-    {
+    {   
+
         return $house->isMembre($user);
     }
 
