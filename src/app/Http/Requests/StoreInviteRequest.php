@@ -22,7 +22,7 @@ class StoreInviteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'max:255', 'email:rfc,dns'],
+            'email' => ['required', 'string', 'max:255', 'email:rfc'],
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string', 'min:5']
         ];

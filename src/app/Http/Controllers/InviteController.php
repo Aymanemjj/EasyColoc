@@ -6,6 +6,7 @@ use App\Http\Requests\StoreInviteRequest;
 use App\Mail\Invitation;
 use App\Models\House;
 use App\Models\Invite;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -46,18 +47,46 @@ class InviteController extends Controller
 
     public function verification($token)
     {
+
         $invitation = Invite::where('token', $token)->get();
         $invitation = $invitation[0];
 
-        if(Auth::check()){
-            return view("inviteResponse", compact("invitation"));
-        }else{
-            
+        if (Auth::check()) {
+            if ($invitation->isInvitee()) {
+                return view("inviteResponse", compact("invitation"));
+            } else {
+                return view("inviteResponseFalse");
+            }
+        } else if (User::where('email', $invitation->email)->exists()) {
+            return redirect("/login?invite={$invitation->token}");
+        } else {
+            return redirect("/register?invite={$invitation->token}");
         }
-
-        
-
     }
 
-    public function response() {}
+    public function response($token, $action)
+    {
+
+
+
+        $invitation = Invite::where('token', $token)->get();
+        $invitation = $invitation[0];
+        $house = House::find($invitation->house_id);
+        switch ($action) {
+            case 1:
+                $house->addMember(Auth::user());
+                $invitation->status = 0;
+                $invitation->save();
+                break;
+            case 2:
+                $invitation->status = 0;
+                $invitation->save();
+
+                break;
+            default:
+
+                break;
+        }
+        return redirect(route('dashboard'));
+    }
 }

@@ -59,4 +59,8 @@ class House extends Model
     public function expences():HasMany{
         return $this->hasMany(Expences::class);
     }
+
+    public function addMember($user){
+        $this->user()->attach($user, ['is_owner' => 0]);
+    }
 }

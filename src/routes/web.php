@@ -54,14 +54,9 @@ Route::delete('/house/{id}/category/delete', [CategoryController::class, 'destro
 Route::get('/house/{id}/invite/create', [InviteController::class, 'create'])->name('invite.create');
 Route::post('/house/{id}/invite/create', [InviteController::class, 'store'])->name('invite.store');
 Route::get('/invite/{token}/response', [InviteController::class, 'verification'])->name('invite.verification');
-Route::patch('/invite/{token}/response', [InviteController::class, 'response'])->name('invite.response');
+Route::patch('/invite/{token}/response/{action}', [InviteController::class, 'response'])->name('invite.response');
 require __DIR__.'/auth.php';
 
 
 Route::resource('house', HouseController::class);
 
-Route::get('/testemail', function(){
-    $from = auth()->user()->id;
-    $to = 'easycoloc@testing.com';
-    Mail::to($to)->send(new Invitation());
-});

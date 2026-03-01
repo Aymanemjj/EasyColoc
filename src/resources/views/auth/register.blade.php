@@ -1,12 +1,28 @@
 <x-guest-layout>
+
+    @if ($invite != null)
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            <div
+                class="flex flex-col justify-center text-cyan-950 bg-cyan-200 border-2  border-cyan-950 p-2 rounded-md text-center">
+                <h2>Invitation detected</h2>
+                <div class="bg-cyan-200, text-cyan-950, p-2, rounded-sm">
+                    <p>Please register into our site to responde to it</p>
+                </div>
+            </div>
+        </div>
+    @endif
+    
     <form method="POST" action="{{ route('register') }}">
         @csrf
+
+        <x-text-input id="invite" class="block mt-1 w-full" type="hidden" name="invite" value="{{$invite}}"
+            required />
 
         <!-- FirstName -->
         <div>
             <x-input-label for="firstname" :value="__('FirstName')" />
-            <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required
-                autofocus autocomplete="firstname" />
+            <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')"
+                required autofocus autocomplete="firstname" />
             <x-input-error :messages="$errors->get('firstname')" class="mt-2" />
         </div>
         <!-- LastName -->

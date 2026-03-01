@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\InviteController;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -17,10 +18,10 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create($token): View
+    public function create(): View
     {
-        dd($token);
-        return view('auth.register');
+        $invite = request('invite');
+        return view('auth.register', compact('invite'));
     }
 
     /**
@@ -30,9 +31,11 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+
         $request->validate([
             'firstname' => ['required', 'string', 'max:255'],
-            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -67,6 +70,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        if ($request->invite) {
+            return redirect()->route('invite.verification', $request->invite);
+        } else {
+            return redirect(route('dashboard', absolute: false));
+        }
     }
 }
