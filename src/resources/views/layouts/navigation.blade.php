@@ -15,7 +15,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    @if (auth()->user()->notReserved())
+                    @can('create', House::class)
                         <x-nav-link :href="route('house.create')">{{ __('Create house') }}</x-nav-link>
                     @endif
                     @if (auth()->user()->isAdmin())

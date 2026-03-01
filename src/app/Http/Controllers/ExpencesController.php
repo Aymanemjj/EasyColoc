@@ -9,6 +9,7 @@ use App\Models\Expences;
 use App\Models\House;
 use App\Models\PaymentPending;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class ExpencesController extends Controller
@@ -28,6 +29,9 @@ class ExpencesController extends Controller
     {
 
         $house = House::find($id);
+
+        Gate::authorize('create', $house, Expences::class);
+
         return view('expenceCreate', compact('house'));
     }
 
@@ -78,6 +82,10 @@ class ExpencesController extends Controller
     {
         $expence = Expences::find($id);
         $house = House::find($expence->house_id);
+
+        Gate::authorize('update', $expence);
+
+
         $categories = Category::where('house_id', $id)->where('id', '<>', $expence->category_id)->get();
         return view('expenceEdit', compact('house', 'categories', 'expence'));
     }
@@ -104,6 +112,9 @@ class ExpencesController extends Controller
     {
         $expence = Expences::find($id);
         $payments = PaymentPending::where('expence_id', $expence->id)->get();
+
+        Gate::authorize('delete', $expence);
+
         foreach ($payments as $payment) {
             $payment->delete();
         }

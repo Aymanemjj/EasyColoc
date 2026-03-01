@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Models\House;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -21,6 +22,9 @@ class CategoryController extends Controller
     public function create($id)
     {
         $house = House::find($id);
+
+        Gate::authorize('create', $house, Category::class);
+
         return view('categoryCreate', compact('house'));
     }
 
@@ -58,6 +62,9 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $house = House::find($category->house_id);
+
+        Gate::authorize('update', $category);
+
         return view('categoryEdit', compact('house', 'category'));
     }
 
@@ -82,6 +89,10 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
+
+        Gate::authorize('delete', $category);
+
+
         if ($category->deletable()) {
             $category->delete();
             return redirect()->back()

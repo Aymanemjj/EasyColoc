@@ -10,6 +10,7 @@ use App\Models\House;
 use App\Models\PaymentPending;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Request;
 
 class HouseController extends Controller
@@ -24,6 +25,9 @@ class HouseController extends Controller
      */
     public function create()
     {
+
+        Gate::authorize('create', House::class);
+
         if (!auth()->user()->notReserved()) {
             return redirect()->route('dashboard')
                 ->withErrors([
@@ -60,6 +64,9 @@ class HouseController extends Controller
     public function show($id)
     {
         $house = House::find($id);
+
+        Gate::authorize('view', $house);
+
         $categories = Category::where('house_id', $id)->get();
         $expences = Expences::where('house_id', $id)->get();
         return view('house', compact('house', 'categories', 'expences'));
@@ -108,7 +115,6 @@ class HouseController extends Controller
             ]);
     }
 
-    public function cleanHouse($house) {}
 
     public function action(Request $request, $id, $user, $action)
     {
@@ -129,6 +135,10 @@ class HouseController extends Controller
     }
     public function promote($house, $user)
     {
+
+        Gate::authorize('promote', $house);
+
+
         foreach ($house->user as $Uuser) {
             if ($Uuser->id == $user->id) $Uuser->pivot->is_owner = 1;
             if ($Uuser->id == auth()->user()->id) $Uuser->pivot->is_owner = 0;
@@ -137,6 +147,9 @@ class HouseController extends Controller
     }
     public function kickUser($house, $user)
     {
+
+        Gate::authorize('kickUser', $house);
+
 
         if (count($user->needToPay($house->id)) == 0) {
             foreach ($house->user as $Uuser) {
@@ -179,6 +192,9 @@ class HouseController extends Controller
     public function destroy($id)
     {
         $house = House::find($id);
+
+        Gate::authorize('delete', $house);
+
 
         if (count(auth()->user()->needToPay($house->id)) == 0 && count($house->user) == 1) {
 

@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
+use App\Models\Category;
 use App\Models\House;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class HousePolicy
+class CategoryPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,49 +20,39 @@ class HousePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, House $house)
+    public function view(User $user, Category $category): bool
     {
-        return $house->isMembre($user);
+        return false;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, House $house): bool
     {
-        return $user->role->name == 'admin' || ($user->status == true && $user->notReserved());
+        return $house->userIsOwner($user);
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, House $house)
+    public function update(User $user, Category $category): bool
     {
-        return $house->userIsOwner($user);
+        return $category->house->userIsOwner($user);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, House $house)
+    public function delete(User $user, Category $category): bool
     {
-        return $house->userIsOwner($user);
-    }
-
-    public function kickUser(User $user, House $house)
-    {
-        return $house->userIsOwner($user);
-    }
-
-    public function promote(User $user, House $house)
-    {
-        return $house->userIsOwner($user);
+        return $category->house->userIsOwner($user);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, House $house): bool
+    public function restore(User $user, Category $category): bool
     {
         return false;
     }
@@ -69,7 +60,7 @@ class HousePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, House $house): bool
+    public function forceDelete(User $user, Category $category): bool
     {
         return false;
     }
