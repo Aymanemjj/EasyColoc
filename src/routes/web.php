@@ -17,14 +17,17 @@ Route::get('/', function () {
 });
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'banned', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdministrationController::class, 'index'])->name('admin.dashboard');
+    Route::patch('/admin/dashboar{id}', [AdministrationController::class, 'ban'])->name('admin.ban');
+});
+
+Route::middleware(['auth', 'banned'])->group(function () {
 
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/admin/dashboard', [AdministrationController::class, 'index'])->name('admin.dashboard');
-    Route::patch('/admin/dashboar{id}', [AdministrationController::class, 'ban'])->name('admin.ban');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
