@@ -75,7 +75,7 @@ class User extends Authenticatable
 
     public function notReserved()
     {
-        return $this->house->isEmpty() /* ? true : false */;
+        return $this->house->isEmpty();
     }
 
     public function pfp()
@@ -97,6 +97,7 @@ class User extends Authenticatable
             if ($payment->expence->house->id == $id && !$payment->status) array_push($toPay, $payment);
 
         }
+
 
         return $toPay;
     }

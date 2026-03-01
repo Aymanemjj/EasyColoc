@@ -82,7 +82,19 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
-        $category->delete();
-        return redirect()->back();
+        if ($category->deletable()) {
+            $category->delete();
+            return redirect()->back()
+                ->withErrors([
+                    'type' => 1,
+                    'general' => "Category deleted"
+                ]);;
+        } else {
+            return redirect()->back()
+                ->withErrors([
+                    'type' => 0,
+                    'general' => "You can't delete categories which have a linked payment to them"
+                ]);;
+        }
     }
 }

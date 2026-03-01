@@ -53,7 +53,15 @@ class InviteController extends Controller
 
         if (Auth::check()) {
             if ($invitation->isInvitee()) {
-                return view("inviteResponse", compact("invitation"));
+                if (auth()->user()->notReserved()) {
+                    return view("inviteResponse", compact("invitation"));
+                } else {
+                    return redirect()->route('dashboard')
+                        ->withErrors([
+                            'type' => 0,
+                            'general' => "Your already a member in a house"
+                        ]);
+                }
             } else {
                 return view("inviteResponseFalse");
             }

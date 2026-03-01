@@ -24,6 +24,13 @@ class HouseController extends Controller
      */
     public function create()
     {
+        if (!auth()->user()->notReserved()) {
+            return redirect()->route('dashboard')
+                ->withErrors([
+                    'type' => 0,
+                    'general' => "Your already a member in a house"
+                ]);
+        }
         return view('houseCreate');
     }
 
@@ -32,6 +39,8 @@ class HouseController extends Controller
      */
     public function store(StoreHouseRequest $request)
     {
+
+
         $validated = $request->validated();
         House::create([
             'title' => $validated['title'],
@@ -172,7 +181,7 @@ class HouseController extends Controller
         $house = House::find($id);
 
         if (count(auth()->user()->needToPay($house->id)) == 0 && count($house->user) == 1) {
-            
+
             foreach ($house->user as $Uuser) {
                 $Uuser->pivot->status = 0;
                 $Uuser->pivot->delete();
