@@ -17,8 +17,9 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create($token): View
     {
+        dd($token);
         return view('auth.register');
     }
 
@@ -36,17 +37,17 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-/*         if (!User::exists()) {
+        /*        
+        if (!User::exists()) {
             dd('true');
         } else {
             dd('false');
         }
-
-
-
         dd('enter');
+        */
 
- */        $user = User::first();
+
+        $user = User::first();
         if (is_null($user)) {
             $request['role'] = 1;
         } else {

@@ -53,8 +53,8 @@ Route::delete('/house/{id}/category/delete', [CategoryController::class, 'destro
 
 Route::get('/house/{id}/invite/create', [InviteController::class, 'create'])->name('invite.create');
 Route::post('/house/{id}/invite/create', [InviteController::class, 'store'])->name('invite.store');
-Route::get('/house/invite/{token}/response', [InviteController::class, 'create'])->name('invite.response');
-
+Route::get('/invite/{token}/response', [InviteController::class, 'verification'])->name('invite.verification');
+Route::patch('/invite/{token}/response', [InviteController::class, 'response'])->name('invite.response');
 require __DIR__.'/auth.php';
 
 

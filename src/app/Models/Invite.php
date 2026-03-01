@@ -27,4 +27,12 @@ class Invite extends Model
     public function link(){
         return "http://127.0.0.1:8000/invite/"  . $this->token . "/response" ;
     }
+
+    public function is_active(){
+        return $this->status;
+    }
+
+    public function isInvitee(){
+        return $this->email == auth()->user()->email;
+    }
 }

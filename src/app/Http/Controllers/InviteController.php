@@ -7,6 +7,7 @@ use App\Mail\Invitation;
 use App\Models\House;
 use App\Models\Invite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -46,6 +47,16 @@ class InviteController extends Controller
     public function verification($token)
     {
         $invitation = Invite::where('token', $token)->get();
+        $invitation = $invitation[0];
+
+        if(Auth::check()){
+            return view("inviteResponse", compact("invitation"));
+        }else{
+            
+        }
+
+        
+
     }
 
     public function response() {}
