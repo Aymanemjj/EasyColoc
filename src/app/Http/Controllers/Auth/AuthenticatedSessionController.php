@@ -17,8 +17,8 @@ class AuthenticatedSessionController extends Controller
     public function create(): View
     {
         $invite = request('invite');
-        
-        return view('auth.login',compact("invite"));
+
+        return view('auth.login', compact("invite"));
     }
 
     /**
@@ -30,7 +30,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        
+        if ($request->invite) {
+            return redirect()->route('invite.verification', $request->invite);
+        } else {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
     }
 
     /**
