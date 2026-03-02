@@ -19,7 +19,8 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'banned', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdministrationController::class, 'index'])->name('admin.dashboard');
-    Route::patch('/admin/dashboar{id}', [AdministrationController::class, 'ban'])->name('admin.ban');
+    Route::patch('/admin/dashboar/ban/{id}', [AdministrationController::class, 'ban'])->name('admin.ban');
+    Route::patch('/admin/dashboar/promote/{id}', [AdministrationController::class, 'promote'])->name('admin.promote');
 });
 
 Route::middleware(['auth', 'banned'])->group(function () {

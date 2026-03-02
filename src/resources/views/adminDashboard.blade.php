@@ -58,10 +58,14 @@
                                     <td class="border-r px-2">{{ $user->email }}</td>
                                     <td class="border-r px-2">{{ $user->reputation }}</td>
                                     <td class="border-r px-2">
-                                        <div
-                                            class="bg-white bg-opacity-30 text-white border-2 border-white rounded-md px-1 size-fit mx-auto">
-                                            <small>{{ $user->role->name }}</small>
-                                        </div>
+                                        <form action="{{ route('admin.promote', $user->id) }}" method="post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button
+                                                class="text-white hover:underline text-xs font-bold bg-white bg-opacity-30 border-2 border-white px-2 rounded-md">
+                                                {{ $user->role->name }}
+                                            </button>
+                                        </form>
                                     </td>
                                     <td class="border-l text-right px-2">
                                         <form action="{{ route('admin.ban', $user->id) }}" method="post">
