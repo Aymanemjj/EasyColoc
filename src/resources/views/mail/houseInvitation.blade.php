@@ -2,6 +2,13 @@
     <div>
         <div class="text-center">
             <h1>House invitation</h1>
+            <h2>{{$invitation->title}}</h2>
+        </div>
+        <div>
+            <p>{{$invitation->body}}</p>
+        </div>
+        <div>
+            <p>-----------------------------------------------------------------------------------------------------------------------</p>
         </div>
         <div class="flex flex-col, ga4 font-semibold">
             <p>{{ $invitation->sender->fullname() }} would like to invite you to his share-house.</p>
