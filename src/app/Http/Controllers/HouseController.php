@@ -119,20 +119,23 @@ class HouseController extends Controller
 
     public function exit($id)
     {
+
         $house = House::find($id);
         $Auser = auth()->user();
+        if ($Auser->isAdmin()) {
 
-        if (count($house->user) > 1) {
-            $collection = $house->user;
-            $sorted = $collection->sortByDesc('reputation');
+            if (count($house->user) > 1) {
+                $collection = $house->user;
+                $sorted = $collection->sortByDesc('reputation');
 
-            if ($Auser->id == $house->owner[0]->id) {
-                $this->promote($house, $sorted[1]);
+                if ($Auser->id == $house->owner[0]->id) {
+                    $this->promote($house, $sorted[1]);
+                } else {
+                    $this->promote($house, $sorted[0]);
+                }
             } else {
-                $this->promote($house, $sorted[0]);
+                $this->destroy($house->id);
             }
-        } else {
-            $this->destroy($house->id);
         }
 
         $payments = $Auser->needToPay($house->id);

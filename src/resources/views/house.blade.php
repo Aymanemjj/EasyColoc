@@ -73,6 +73,11 @@
                                 type="submit">Delete <i class="fa-regular fa-trash-can fa-xs"
                                     style="color: rgb(231, 24, 24);"></i></button>
                         </form>
+                        <button
+                            class="bg-yellow-600 bg-opacity-30 border-yellow-600 border-2 border-solid p-1 rounded-md text-yellow-600"><a
+                                href="{{ route('house.edit', $house->id) }}">Edit <i
+                                    class="fa-solid fa-pen-to-square fa-xs"
+                                    style="color: rgb(255, 212, 59);"></i></a></button>
                     @endif
                     <form action="{{ route('house.exit', $house->id) }}" method="POST">
                         @csrf
@@ -82,11 +87,6 @@
                             type="submit" name="exit">Exit <i class="fa-solid fa-arrow-right-from-bracket fa-xs"
                                 style="color: rgb(255, 255, 255);"></i></button>
                     </form>
-                    <button
-                        class="bg-yellow-600 bg-opacity-30 border-yellow-600 border-2 border-solid p-1 rounded-md text-yellow-600"><a
-                            href="{{ route('house.edit', $house->id) }}">Edit <i
-                                class="fa-solid fa-pen-to-square fa-xs"
-                                style="color: rgb(255, 212, 59);"></i></a></button>
                 </div>
             </div>
             {{-- House Details --}}
