@@ -21,6 +21,42 @@
     @else
         <x-message-error :messages="$errors->get('general')" class="mt-2" />
     @endif
+
+
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-4">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Balance</h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex flex-col gap-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Total Paid</span>
+                    <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($totalPaid, 2) }}
+                        $</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Your Share</span>
+                    <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($yourShare, 2) }}
+                        $</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Balance</span>
+                    @if ($balance >= 0)
+                        <span class="text-2xl font-bold text-green-500">+{{ number_format($balance, 2) }}
+                            $</span>
+                        <small class="text-green-400">Others owe you</small>
+                    @else
+                        <span class="text-2xl font-bold text-red-500">{{ number_format($balance, 2) }} $</span>
+                        <small class="text-red-400">You owe others</small>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-2">
             <div class=" flex justify-between">

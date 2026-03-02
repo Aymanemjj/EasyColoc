@@ -24,9 +24,7 @@ Route::middleware(['auth', 'banned', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'banned'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [HouseController::class, 'index'])->name('dashboard');
 
 
 

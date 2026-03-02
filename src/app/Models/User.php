@@ -90,7 +90,7 @@ class User extends Authenticatable
 
     public function allPayments(): HasMany
     {
-        return $this->hasMany(PaymentPending::class);
+        return $this->hasMany(PaymentPending::class)->withTrashed();
     }
 
     public function needToPay($id)

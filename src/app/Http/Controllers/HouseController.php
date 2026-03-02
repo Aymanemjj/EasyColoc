@@ -18,14 +18,57 @@ class HouseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+
+        $query = $user->allPayments()->with(['expence.category', 'expence.house']);
+
+        if ($request->month) {
+            $query->whereHas('expence', fn ($q) => $q->where('date', $request->month));
+        }
+
+
+        $paymentHistory = $query->paginate(10);
+
+
+
+        $totalPaid = $user->allPayments()->where('status', 1)->sum('amount') ?? 0;
+        $availableMonths = [];
+        foreach ($user->allPayments as $payment) {
+            if (!in_array($payment->expence->date, $availableMonths)) {
+                array_push($availableMonths, $payment->expence->date);
+            }
+        }
+        return view('dashboard', compact('totalPaid', 'availableMonths', 'paymentHistory'));
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        $house = House::find($id);
+
+        Gate::authorize('view', $house);
+
+        $categories = Category::where('house_id', $id)->get();
+        $expences = Expences::where('house_id', $id)->get();
+        return view('house', compact('house', 'categories', 'expences'));
+    }
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        
+
         Gate::authorize('create', House::class);
 
         if (!auth()->user()->notReserved() && auth()->user()->role->name != 'admin') {
@@ -58,19 +101,6 @@ class HouseController extends Controller
             ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $house = House::find($id);
-
-        Gate::authorize('view', $house);
-
-        $categories = Category::where('house_id', $id)->get();
-        $expences = Expences::where('house_id', $id)->get();
-        return view('house', compact('house', 'categories', 'expences'));
-    }
 
 
 
@@ -88,7 +118,7 @@ class HouseController extends Controller
             } else {
                 $this->promote($house, $sorted[0]);
             }
-        }else{
+        } else {
             $this->destroy($house->id);
         }
 
