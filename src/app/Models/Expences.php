@@ -22,19 +22,21 @@ class Expences extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id')->withTrashed();
     }
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
-    public function house(): BelongsTo{
-        return $this->belongsTo(House::class, 'house_id');
+    public function house(): BelongsTo
+    {
+        return $this->belongsTo(House::class, 'house_id')->withTrashed();
     }
 
-    public function payments():HasMany{
+    public function payments(): HasMany
+    {
         return $this->hasMany(PaymentPending::class, 'expence_id');
     }
 }

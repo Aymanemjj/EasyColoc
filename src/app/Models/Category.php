@@ -27,21 +27,8 @@ class Category extends Model
         return $this->hasMany(Expences::class);
     }
 
-/*     public function pendingPayments()
-    {
-        $payments = [];
-        foreach ($this->expenses as $expense) {
-            foreach ($expense->payments as $payment) {
-                if ($payment->status == 0) {
-                    array_push($payments, $payment);
-                }
-            }
-        }
-        return $payments;
-    }
- */
     public function deletable()
     {
-        return $this->expenses()->count()== 0;
+        return $this->expenses()->count() == 0;
     }
 }
