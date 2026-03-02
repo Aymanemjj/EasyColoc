@@ -36,7 +36,7 @@ class HousePolicy
      * Determine whether the user can update the model.
      */
     public function update(User $user, House $house)
-    {
+    {   
         return $house->authIsOwner();
     }
 

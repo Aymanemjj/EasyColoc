@@ -54,17 +54,17 @@ class HouseController extends Controller
 
         Gate::authorize('view', $house);
 
-        $payments = $user->allPayments()->where('status', 1)->where('house_id', $house->id);
+        $payments = $user->allPayments()->where('status', 1)->get();
         $totalPaid = 0;
-        
-        foreach($payments as $payment){
-            if($payment->expence->house->id == $house->id){
+
+        foreach ($payments as $payment) {
+            if ($payment->expence->house->id == $house->id) {
                 $totalPaid += $payment->amount;
-            } 
+            }
         }
 
         $yourShare = $totalPaid / $house->user->count();
-        $balance = $totalPaid - $yourShare; 
+        $balance = $totalPaid - $yourShare;
 
         $categories = Category::where('house_id', $id)->get();
         $expences = Expences::where('house_id', $id)->get();
@@ -221,17 +221,30 @@ class HouseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(House $house)
+    public function edit($id)
     {
-        //
+
+        $house = House::find($id);
+
+        Gate::authorize('update', [House::class, $house]);
+
+        return view('houseEdit', compact('house'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateHouseRequest $request, House $house)
+    public function update(UpdateHouseRequest $request, $id)
     {
-        //
+        $validated = $request->validated();
+
+        $house = House::find($id);
+        $house->update($validated);
+        return redirect()->route('house.show', $house->id)
+            ->withErrors([
+                'type' => 1,
+                'general' => "House Edited"
+            ]);
     }
 
     /**

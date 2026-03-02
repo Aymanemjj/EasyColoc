@@ -70,15 +70,19 @@
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Payment History</h3>
                         {{-- Month Filter --}}
                         <form method="GET" action="{{ route('dashboard') }}">
-                            <select name="month" onchange="this.form.submit()"
+                            <select name="month"
                                 class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="0" >All months</option>
+                                <option value="0">All months</option>
                                 @foreach ($availableMonths as $month)
                                     <option value="{{ $month }}">
-                                        {{ $month}}
+                                        {{ $month }}
                                     </option>
                                 @endforeach
                             </select>
+                            <x-primary-button class="ms-4">
+                                {{ __('Filter') }}
+                            </x-primary-button>
+
                         </form>
                     </div>
                     <table class="w-full text-center text-white">

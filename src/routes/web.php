@@ -35,6 +35,10 @@ Route::middleware(['auth', 'banned'])->group(function () {
 
     Route::get('/create-house', [HouseController::class, 'create'])->name('house.create');
     Route::post('/create-house', [HouseController::class, 'store'])->name('house.store');
+
+    Route::get('/house/{id}/edit', [HouseController::class, 'edit'])->name('house.edit');
+    Route::put('/house/{id}/edit', [HouseController::class, 'update'])->name('house.update');
+
     Route::patch('/house/{id}/details', [HouseController::class, 'exit'])->name('house.exit');
     Route::delete('/house/{id}/details', [HouseController::class, 'destroy'])->name('house.destroy');
     Route::get('/house/{id}/details', [HouseController::class, 'show'])->name('house.show');
