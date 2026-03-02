@@ -72,11 +72,10 @@
                         <form method="GET" action="{{ route('dashboard') }}">
                             <select name="month" onchange="this.form.submit()"
                                 class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="">All months</option>
+                                <option value="0" >All months</option>
                                 @foreach ($availableMonths as $month)
-                                    <option value="{{ $month }}"
-                                        {{ request('month') == $month ? 'selected' : '' }}>
-                                        {{ \Carbon\Carbon::parse($month . '-01')->format('F Y') }}
+                                    <option value="{{ $month }}">
+                                        {{ $month}}
                                     </option>
                                 @endforeach
                             </select>

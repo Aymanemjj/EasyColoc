@@ -24,8 +24,8 @@ class HouseController extends Controller
 
         $query = $user->allPayments()->with(['expence.category', 'expence.house']);
 
-        if ($request->month) {
-            $query->whereHas('expence', fn ($q) => $q->where('date', $request->month));
+        if ($request->month != "0") {
+            $query->whereHas('expence', fn($q) => $q->where('date', $request->month));
         }
 
 
@@ -50,12 +50,25 @@ class HouseController extends Controller
     public function show($id)
     {
         $house = House::find($id);
+        $user = auth()->user();
 
         Gate::authorize('view', $house);
 
+        $payments = $user->allPayments()->where('status', 1)->where('house_id', $house->id);
+        $totalPaid = 0;
+        
+        foreach($payments as $payment){
+            if($payment->expence->house->id == $house->id){
+                $totalPaid += $payment->amount;
+            } 
+        }
+
+        $yourShare = $totalPaid / $house->user->count();
+        $balance = $totalPaid - $yourShare; 
+
         $categories = Category::where('house_id', $id)->get();
         $expences = Expences::where('house_id', $id)->get();
-        return view('house', compact('house', 'categories', 'expences'));
+        return view('house', compact('house', 'categories', 'expences', 'totalPaid', 'yourShare', 'balance'));
     }
 
 
